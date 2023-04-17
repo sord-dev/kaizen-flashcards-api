@@ -6,7 +6,8 @@
   "scripts": {
     "start": "node .",
     "dev": "nodemon .",
-    "test": "jest -verbose",
+    "test": "jest -verbose --force-exit",
+    "coverage": "jest --coverage --force-exit",
     "setup-db": "node ./src/database/setup.js"
   },
   "keywords": [],
@@ -22,6 +23,7 @@
   },
   "devDependencies": {
     "jest": "^29.5.0",
-    "nodemon": "^2.0.22"
+    "nodemon": "^2.0.22",
+    "supertest": "^6.3.3"
   }
 }
