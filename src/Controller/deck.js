@@ -1,5 +1,5 @@
-const Deck = require("../models/Deck_model");
-const User = require("../models/User_model");
+const Deck = require("../models/deck");
+const User = require("../models/user");
 
 const allByID = async(req,res)=>{
     try{

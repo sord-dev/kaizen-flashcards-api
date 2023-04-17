@@ -1,7 +1,7 @@
 const router = require('express').Router();
 const deckRouter = require("./Deck_router");
 
-const Deck = require('../models/Deck_model.js')
+const Deck = require('../models/deck.js/index.js')
 
 router.get('/', async (req, res, next) => {
   try {
