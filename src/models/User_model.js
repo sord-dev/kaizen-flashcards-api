@@ -33,17 +33,32 @@ class User {
 
   static async hashPassword(password) {
     const salt = await bcrypt.genSalt();
-
+    
     let hashed = await bcrypt.hash(password, salt);
-    return hashed;
+    try{
+      const resp = await db.query("INSERT INTO Token(token) VALUES($1);",[hashed])
+      return hashed;
+    }
+    catch{throw new Error ("Unable to hashpassword")}
   }
-
+  stat
   static async comparePassword(query, compare) {
     let valid = await bcrypt.compare(query, compare);
 
     return valid;
   }
-
+  static async CheckUserAccount(username,password){
+    try{
+      const answer = await db.query("SELECT * FROM users WHERE username = $1 AND password = $2",[username,password])
+      if (answer.rows.length == 0){
+        return ("No Account")
+      }
+      else ("Account exists")
+    } 
+    catch{
+      throw new Error("Unable to check if user account exists")
+    }
+  }
   async save() {
     let response = await db.query(
       "INSERT INTO users (username, password) VALUES ($1 ,$2) RETURNING *",

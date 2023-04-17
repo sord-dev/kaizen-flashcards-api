@@ -9,7 +9,13 @@ CREATE TABLE users (
   password VARCHAR(255),
   UNIQUE (user_id)
 );
-
+CREATE TABLE token (
+  token_id INT GENERATED ALWAYS AS IDENTITY,
+  Token VARCHAR(255) UNIQUE,
+  user_id INT NOT NULL,
+  PRIMARY Key (token_id),
+  FOREIGN KEY (user_id) REFERENCES users
+);
 CREATE TABLE decks (
   deck_id  INT GENERATED ALWAYS AS IDENTITY,
   name VARCHAR(255),
