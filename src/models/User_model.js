@@ -41,7 +41,6 @@ class User {
     }
     catch{throw new Error ("Unable to hashpassword")}
   }
-  stat
   static async comparePassword(query, compare) {
     let valid = await bcrypt.compare(query, compare);
 
