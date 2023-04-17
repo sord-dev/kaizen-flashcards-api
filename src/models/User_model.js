@@ -7,7 +7,15 @@ class User {
     this.username = username;
     this.password = password;
   }
-
+  static async GetIDByName(username){
+    try{
+      const resp = await db.query("SELECT user_id FROM users WHERE username = $1",[username])
+      return resp;
+    }
+    catch{
+      throw new Error("Unable to get")
+    }
+  }
   static async find() {
     let res = await db.query("SELECT * FROM users;");
 

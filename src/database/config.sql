@@ -24,7 +24,6 @@ CREATE TABLE decks (
   FOREIGN KEY (user_id) REFERENCES users(user_id),
    UNIQUE (deck_id)
 );
-
 CREATE TABLE cards(
     card_id INT GENERATED ALWAYS AS IDENTITY,
     question VARCHAR(255) NOT NULL,
@@ -32,7 +31,6 @@ CREATE TABLE cards(
     answer VARCHAR(255) NOT NULL,
     UNIQUE (card_id)
 );
-
 CREATE TABLE deck_cards (
   id  INT GENERATED ALWAYS AS IDENTITY,
   deck_id INT,

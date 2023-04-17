@@ -1,4 +1,5 @@
 const router = require('express').Router();
+const deckRouter = require("./Deck_router");
 
 const Deck = require('../models/Deck_model.js')
 
@@ -11,4 +12,5 @@ router.get('/', async (req, res, next) => {
   }
 });
 
+router.use("/decks",deckRouter);
 module.exports = router;
