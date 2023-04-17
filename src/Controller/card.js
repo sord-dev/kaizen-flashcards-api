@@ -1,8 +1,8 @@
-const Card = require("../models/Card_model");
-
-const getAll =(req,res)=>{
+const Card = require("../models/card");
+async function getAll(req,res){
     try{
-        const resp = Card.getByDeckId(parseInt(req.params.id))
+        const id = parseInt(req.params.cardid)
+        const resp = await Card.getById(id)
         res.status(200).json(resp);
     }
     catch{
@@ -13,7 +13,7 @@ const getAll =(req,res)=>{
 
 const oneCardFromOneDeck = async(req,res)=>{
     try{
-        const resp = await Card.getCardByDeck(parseInt(req.params.deckid,req.params.cardid))
+        const resp = await Card.getCardByDeck(parseInt(req.params.deckid),parseInt(req.params.cardid))
         res.status(200).json(resp);
     }
     catch{

@@ -31,5 +31,7 @@ const remove = async(req,res)=>{
 
 module.exports = {
     Login,
-    register
+    register,
+    remove
+
 }

@@ -1,5 +1,8 @@
 const express = require('express');
 const createError = require('http-errors');
+const cardRouter = require("./routes/card");
+const deckRouter = require("./routes/deck");
+const userRouter = require("./routes/user");
 const morgan = require('morgan');
 require('dotenv').config();
 
@@ -12,11 +15,12 @@ app.get('/', async (req, res, next) => {
   res.send({ message: 'Awesome it works 🐻' });
 });
 
-app.use('/api', require('./routes/api.route'));
-
 app.use((req, res, next) => {
   next(createError.NotFound());
 });
+app.use("/deck",deckRouter)
+app.use("/card", cardRouter)
+app.use("/user",userRouter)
 
 app.use((err, req, res, next) => {
   res.status(err.status || 500);
