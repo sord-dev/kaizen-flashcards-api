@@ -6,5 +6,4 @@ describe("Starter Tests", () => {
     it('Equasion', () => {
         expect(2 == 2).toBe(true)
     });
-    
 })
