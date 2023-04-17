@@ -1,5 +1,5 @@
 const {Router} = require("express");
-const card_controller = require("../Controller/Card_controller")
+const card_controller = require("../Controller/card")
 const middleWare = require("")
 
 const card_router = Router();

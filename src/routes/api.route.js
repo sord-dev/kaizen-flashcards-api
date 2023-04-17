@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const deckRouter = require("./Deck_router");
+const deckRouter = require("./deck");
 
 const Deck = require('../models/deck.js/index.js')
 
