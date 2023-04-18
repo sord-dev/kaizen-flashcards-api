@@ -59,7 +59,7 @@ describe("Deck Endpoint Tests", () => {
     })
 
     it('Should respond with all decks on request to /decks', async () => {
-        const decks = await server.get('/deck').send({user_id: 1})
+        const decks = await server.post('/deck').send({user_id: 1})
         expect(decks.statusCode).toEqual(200)
         expect(Array.isArray(decks.body)).toEqual(true);
     });
@@ -71,7 +71,7 @@ describe("Deck Endpoint Tests", () => {
         expect(typeof(decks.body)).toEqual("object");
     });
     it('Should create new deck', async () => {
-        const response = await server.post('/deck').send({ name: "test deck", user_id : 1});
+        const response = await server.post('/deck/new').send({ name: "test deck", user_id : 1 });
         const user_id = parseInt(response.text)
 
         expect(response.statusCode).toEqual(201)
