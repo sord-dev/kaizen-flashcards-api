@@ -9,6 +9,7 @@ class Card {
   }
   static async getById(id){
     try{
+      console.log(id)
       const resp = await db.query("SELECT * FROM cards WHERE card_id = $1",[id])
       return resp.rows[0];
     }
@@ -61,9 +62,6 @@ class Card {
     
     console.log(query2)
       const { rowCount } = await db.query(query2);
-  
-    
-    console.log("for",rowCount)
 
     if(!rowCount) throw new Error('Card assignment error.')
 

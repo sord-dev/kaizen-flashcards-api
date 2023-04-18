@@ -35,12 +35,12 @@ const NewCard = async(req,res) =>{
 }
 const updateCard = async(req,res) =>{
     try{
-        const updatingCard = await Card.getById(parseInt(req.params.cardid));
+        const updatingCard = await Card.getById(parseInt(req.params.card_id));
         const resp = await updatingCard.updateCard(req.body);
         res.status(200).status(resp)
     }
-    catch{
-        throw new Error("unable to update")
+    catch(e){
+        res.json({message : e.message})
     }
 }
 const remove = async(req,res) =>{
