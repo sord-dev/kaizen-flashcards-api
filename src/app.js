@@ -18,6 +18,7 @@ app.get('/', async (req, res, next) => {
 app.use((req, res, next) => {
   next(createError.NotFound());
 });
+
 app.use("/deck",deckRouter)
 app.use("/card", cardRouter)
 app.use("/user",userRouter)

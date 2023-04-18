@@ -2,8 +2,8 @@ const User = require ("../models/user");
 
 const Login = async(req,res)=>{
     try{
-        const resp = User.CheckUserAccount(req.params.username,req.params.password)
-        const token = User.hashPassword(req.params.password)
+        const resp = await User.CheckUserAccount(req.params.username,req.params.password)
+        const token = await User.getToken(req.params.username)
         res.json(token).status(202)
     }
     catch{
@@ -12,8 +12,9 @@ const Login = async(req,res)=>{
 }
 const register = async(req,res)=>{
     try{
-        const resp = User.save(req.body.username,req.body.password);
-        const token = User.hashPassword(req.params.password);
+        const resp = await User.save(req.body.username,req.body.password);
+        const token = await User.createUserToken();
+        const sent = await User.addToken(token)
         res.json(token).status(201);
     }
     catch{
@@ -22,10 +23,13 @@ const register = async(req,res)=>{
 }
 const remove = async(req,res)=>{
     try{
-        ///Token needed
+        const userToken = req.headers["authorization"]
+        const token = await User.findTokenAndDelete(userToken)
+        res.status(200)
     }
     catch{
-        ///Add here
+        res.status(404)
+       throw new Error("Unable to delete token")
     }
 }
 
