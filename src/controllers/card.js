@@ -1,6 +1,6 @@
 const Card = require("../models/card");
-const User = require("../models/user");
-const Deck = require ("../models/deck")
+//const User = require("../models/user");
+//const Deck = require ("../models/deck")
 
 async function getAll(req,res){
     try{
@@ -25,7 +25,7 @@ const oneCardFromOneDeck = async(req,res)=>{
 }
 const NewCard = async(req,res) =>{
     try{
-             const resp = await Card.saveToDeck(req.body,parseInt(req.params.id));
+             const resp = await Card.saveToDeck(req.body,parseInt(req.params.deck_id));
              console.log("After create");
              res.json(resp).status(201);
     }

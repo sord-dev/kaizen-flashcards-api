@@ -50,18 +50,20 @@ class Card {
     };
 
     const createCard = await db.query(query);
-
     
     if(!createCard.rowCount) throw new Error('Card creation error.')
-
+    
     let card_id = createCard.rows[0].card_id;
-
     const query2 = { // associate the card with the deck
-    text: 'INSERT INTO deck_cards(deck_id, card_id) VALUES($1, $2) RETURNING card_id;',
-      values: [deckId, card_id],
+      text: 'INSERT INTO deck_cards(deck_id, card_id) VALUES($1, $2) RETURNING card_id;',
+      values: [deckId,card_id],
     };
-
-    const { rowCount } = await db.query(query2);
+    
+    console.log(query2)
+      const { rowCount } = await db.query(query2);
+  
+    
+    console.log("for",rowCount)
 
     if(!rowCount) throw new Error('Card assignment error.')
 
