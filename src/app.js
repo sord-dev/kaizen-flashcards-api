@@ -10,7 +10,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(morgan('dev'));
 app.use(cors())
 
-app.get('/', require('./routes/api.route'));
+app.use('/', require('./routes/api.route'));
 
 app.use((req, res, next) => {
   next(createError.NotFound());
