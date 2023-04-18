@@ -71,10 +71,10 @@ class User {
     return new User(res.rows[0]);
   }
 
-  static async findUserIdByToken (token){
+  static async findUserIdByToken (token) {
     try{
       const user_id = await db.query("SELECT user_id FROM token WHERE Token = $1",[token])
-      return user_id;
+      return user_id.rows[0];
     }
     catch{
       throw new Error("Unable to find a user with that token")
@@ -82,15 +82,9 @@ class User {
   }
 
   static async hashPassword(password) {
-
     const salt = await bcrypt.genSalt();
     let hashed = await bcrypt.hash(password, salt);
-
-    try{
-      const resp = await db.query("INSERT INTO Token(token) VALUES($1);",[hashed])
-      return hashed;
-    }
-    catch{throw new Error ("Unable to hashpassword")}
+    return hashed;
   }
   static async comparePassword(query, compare) {
     let valid = await bcrypt.compare(query, compare);

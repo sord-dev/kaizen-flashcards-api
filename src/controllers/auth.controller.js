@@ -1,4 +1,4 @@
-const User = require('../models/User.js')
+const User = require('../models/user.js')
 
 module.exports.login = async (req, res) => {
     let { body } = req;

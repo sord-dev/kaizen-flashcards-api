@@ -1,21 +1,22 @@
 const Card = require("../models/card");
 const User = require("../models/user");
 const Deck = require ("../models/deck")
+
 async function getAll(req,res){
     try{
-        const id = parseInt(req.params.cardid)
-        const resp = await Card.getById(id)
+        const id = parseInt(req.params.card_id)
+        const resp = await Card.getByDeckId(id)
         res.status(200).json(resp);
     }
-    catch{
-        res.status(404)
-        throw new Error ("unable to get all")
+    catch(error) {
+        console.log(error);
+        res.status(404).json({ message: error.message  })
     }
 }
 
 const oneCardFromOneDeck = async(req,res)=>{
     try{
-        const resp = await Card.getCardByDeck(parseInt(req.params.deckid),parseInt(req.params.cardid))
+        const resp = await Card.getByDeckId(parseInt(req.params.deckid))
         res.status(200).json(resp);
     }
     catch{
@@ -24,14 +25,12 @@ const oneCardFromOneDeck = async(req,res)=>{
 }
 const NewCard = async(req,res) =>{
     try{
-        const token = req.headers['authorization']
-        const checker = Deck.doesDeckidExist(req.body.deckid)
-        const user_id = User.findUserIdByToken(token)
-        const resp = await Card.createNew(req.body,user_id);
-        res.json(resp).status(200);
+             const resp = await Card.saveToDeck(req.body,parseInt(req.params.id));
+             console.log("After create");
+             res.json(resp).status(201);
     }
-    catch{
-        res.status(404)
+    catch(e){
+        res.status(404).json({message : e.message})
     }
 }
 const updateCard = async(req,res) =>{

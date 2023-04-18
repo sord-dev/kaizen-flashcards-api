@@ -10,7 +10,7 @@ class Card {
   static async getById(id){
     try{
       const resp = await db.query("SELECT * FROM cards WHERE card_id = $1",[id])
-      return resp[0];
+      return resp.rows[0];
     }
     catch{
       throw new Error("Unable to get one by id")
@@ -42,10 +42,11 @@ class Card {
     }
   }
 
-  async saveToDeck(deckId) {
+  static async saveToDeck(data,deckId) {
+    const {question,description,answer} = data;
     const query = { // create the card
       text: 'INSERT INTO cards(question, description, answer) VALUES($1, $2, $3) RETURNING card_id',
-      values: [this.question, this.description, this.answer],
+      values: [question, description, answer],
     };
 
     const createCard = await db.query(query);
@@ -89,7 +90,7 @@ class Card {
       }
     }
   static async getByDeckId(deckId) {
-    const { rows } = await db.query("SELECT c.card_id, c.question, c.description, c.answer FROM cards c JOIN deck_cards dc ON c.card_id = dc.card_id WHERE dc.deck_id = $1;",deckId);
+    const { rows } = await db.query("SELECT c.card_id, c.question, c.description, c.answer FROM cards c JOIN deck_cards dc ON c.card_id = dc.card_id WHERE dc.deck_id = $1;",[deckId]);
     return rows.map((row) => new Card(row));
   }
 }

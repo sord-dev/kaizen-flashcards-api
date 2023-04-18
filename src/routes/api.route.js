@@ -1,20 +1,14 @@
 const router = require('express').Router();
 const authRouter = require('./auth.route.js')
-
-const Deck = require('../models/Deck_model.js')
+const cardRouter = require("./card");
+const deckRouter = require("./deck");
+const userRouter = require("./user");
 
 router.get('/', (_, res) => res.json(require('./docs/docs.json')))
 
-router.get('/decks', async (req, res, next) => {
-  try {
-    let decks = await Deck.getAll(1); // 1 being the first user_id in the database
-    res.status(200).json(decks);
-  } catch (error) {
-    res.status(404).json({ error: error.message });
-  }
-});
-
 router.use('/auth', authRouter)
-
+router.use("/deck",deckRouter)
+router.use("/card", cardRouter)
+router.use("/user",userRouter)
 
 module.exports = router;
