@@ -37,8 +37,8 @@ class Card {
       }
       return resp.rows[0];
     }
-    catch{
-      throw new Error("Unable to get card")
+    catch(e){
+      throw Error({message : e.message})
     }
   }
 

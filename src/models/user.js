@@ -1,6 +1,6 @@
 const db = require("../database/postgres.db.js");
 const bcrypt = require("bcrypt");
-const { uuid } = require("uuid");
+const  uuid  = require("uuid");
 
 
 class User {
@@ -38,11 +38,11 @@ class User {
       throw new Error("Unable to get")
     }
   }
-  static async addToken(token){
+  static async addToken(token,user_id){
     try{
-      const resp = await db.query("INSERT INTO Token(token) VALUES($1);",[token])
+      const resp = await db.query("INSERT INTO Token(token,user_id) VALUES($1,$2);",[token,user_id])
     }
-    catch{throw new Error ("Unable to insert token")}
+    catch(e){throw new Error (e)}
   }
   static async find() {
     let res = await db.query("SELECT * FROM users;");
@@ -55,10 +55,10 @@ class User {
   }
 
   static async createUserToken(){
-    return uuid(5);
+    return  (uuid.v4(5));
   }
   static async findByUsername(username) {
-    let res = await db.query(
+    const res = await db.query(
       "SELECT * FROM users WHERE LOWER(username) = $1;",
       [username.toLowerCase()]
     );
