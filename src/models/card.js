@@ -9,7 +9,6 @@ class Card {
   }
   static async getById(id){
     try{
-      console.log(id)
       const resp = await db.query("SELECT * FROM cards WHERE card_id = $1",[id])
       return resp.rows[0];
     }
@@ -67,10 +66,11 @@ class Card {
 
     return { card_id };
   }
-    async changeContent (data){
+    static async changeContent (data,card_id){
       const {question,description,answer} = data;
       try{
-        const resp = db.query("UPDATE cards SET question = $1,description = $2, answer = $3 WHERE card_id = $4 RETURNING* ;",[question,description,answer,this.card_id])
+        const resp = await db.query("UPDATE cards SET question = $1,description = $2, answer = $3 WHERE card_id = $4 RETURNING* ;",[question,description,answer,card_id])
+        console.log(resp)
         return resp.rows[0];
       }
       catch{

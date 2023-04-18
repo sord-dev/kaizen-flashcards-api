@@ -13,7 +13,6 @@ async function getAll(req,res){
         res.status(404).json({ message: error.message  })
     }
 }
-
 const oneCardFromOneDeck = async(req,res)=>{
     try{
         const resp = await Card.getByDeckId(parseInt(req.params.deckid))
@@ -36,8 +35,8 @@ const NewCard = async(req,res) =>{
 const updateCard = async(req,res) =>{
     try{
         const updatingCard = await Card.getById(parseInt(req.params.card_id));
-        const resp = await updatingCard.updateCard(req.body);
-        res.status(200).status(resp)
+        const resp = await Card.changeContent(req.body,updatingCard.card_id);
+        res.status(200).json(resp)
     }
     catch(e){
         res.json({message : e.message})
@@ -45,7 +44,7 @@ const updateCard = async(req,res) =>{
 }
 const remove = async(req,res) =>{
     try{
-        const RemovingContent = await Card.getById(parseInt(req.params.cardid));
+        const RemovingContent = await Card.getById(parseInt(req.params.card_id));
         const resp = RemovingContent.Destroy()
         res.status(200)
     }
