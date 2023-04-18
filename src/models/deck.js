@@ -6,7 +6,18 @@ class Deck {
     this.name = name;
     this.user_id = user_id;
   }
+  static async doesDeckidExist(deckid){
+    try{
+      const resp = await db.query("SELECT * FROM decks WHERE deck_id = $1",[deckid])
+      if (resp.rows.length > 1){
+        return "Unable to find deck"
+      }
+    }
+    catch{
+      throw new Error ("Unable to run deck")
+    }
 
+  }
   static async getAll(user_id) {
     const query = {
       text: 'SELECT * FROM decks WHERE user_id = $1',
@@ -42,10 +53,10 @@ class Deck {
     }
   }
 
-  async save() {
+  static async save(name,user_id) {
     const query = {
-      text: 'INSERT INTO decks(name, user_id) VALUES ($1, $2) RETURNING deck_id',
-      values: [this.name, this.user_id],
+      text: 'INSERT INTO decks(name, user_id) VALUES ($1, $2) RETURNING deck_id;',
+      values: [name, user_id],
     };
 
     try {
@@ -56,6 +67,20 @@ class Deck {
       throw err;
     }
   }
+  async update(data){
+    try{
+      const {name} = data;
+      const resp = await db.query("UPDATE deck SET name = $1 RETURNING *;",[name])
+      return resp;
+    }
+    catch{
+      throw new Error("Unable to update")
+    }
+  }
+  async destroy(){
+    const resp = await db.query("DELETE FROM deck WHERE deck_id = $1",[this.deck_id])
+  }
+ 
 }
 
 module.exports = Deck;
