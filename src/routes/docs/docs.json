@@ -25,6 +25,17 @@
           "answer": "string",
           "description": "string"
         }
+      },
+      {
+        "PATCH /:deck_id/:card_id": "update a card from a deck",
+        "body": {
+          "question": "string",
+          "answer": "string",
+          "description": "string"
+        }
+      },
+      {
+        "DELETE /:deck_id/:card_id": "delete a card from a deck"
       }
     ]
   }
