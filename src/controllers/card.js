@@ -45,7 +45,8 @@ const updateCard = async(req,res) =>{
 const remove = async(req,res) =>{
     try{
         const RemovingContent = await Card.getById(parseInt(req.params.card_id));
-        const resp = RemovingContent.Destroy()
+        console.log(RemovingContent)
+        const resp = Card.Destroy(RemovingContent.card_id)
         res.status(200)
     }
     catch{

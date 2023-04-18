@@ -77,16 +77,16 @@ class Card {
         throw new Error("Unable to change card content")
       }
     }
-    async Destroy (){
+    static async Destroy (card_id){
       try{
-        const resp = await db.query("DELETE FROM cards WHERE card_id = $1",[this.card_id])
+        const resp = await db.query("DELETE FROM cards WHERE card_id = $1",[card_id])
         if (resp.rows.length >1){
         throw new Error("Unable to delete card")
         }
         return resp.rows[0];
       }
-      catch{
-        throw new Error("Unable to remove content")
+      catch(e){
+        throw new Error(e)
       }
     }
   static async getByDeckId(deckId) {
