@@ -33,7 +33,7 @@ class Card {
     return { card_id };
   }
 
-  static async getByDeckId(deckId) {
+  static async getCardsByDeckId(deckId) {
     const query = {
       text: 'SELECT c.card_id, c.question, c.description, c.answer FROM cards c JOIN deck_cards dc ON c.card_id = dc.card_id WHERE dc.deck_id = $1;',
       values: [deckId],
