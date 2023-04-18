@@ -8,6 +8,7 @@ const allByID = async(req,res)=>{
     }
     catch{
         res.status(404)
+        console.log("")
         throw new Error("unable to get by id")
     }
 }
