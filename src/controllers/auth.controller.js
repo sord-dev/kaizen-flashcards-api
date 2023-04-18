@@ -4,11 +4,10 @@ module.exports.login = async (req, res) => {
     let { body } = req;
 
     try {
-        console.log("yes")
         const user = await User.findByUsername(body.username);
-
         const validPw = await User.comparePassword(body.password, user.password);
-        const token = User.getToken(req.body.username)
+        const token = await User.getToken(req.body.username)
+        console.log("Token in controller",await token)
         if (validPw) {
             // check user streak
             res.status(200).json({ ...user, password: null,Token:token })
@@ -33,9 +32,10 @@ module.exports.register = async (req, res) => {
         
         const userToken =await User.createUserToken()
         const user = await User.findByUsername(req.body.username)
+        console.log("Add token", userToken)
         await User.addToken(userToken,user.user_id)
         
-      return res.status(201).json({ ...usr, password: null,Token : userToken });
+      return res.status(201).json({ ...usr, password: null,Token : userToken.rows.token });
     } catch (error) {
       return res.status(400).json({ error: error.message });
     }
