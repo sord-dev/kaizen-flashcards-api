@@ -13,7 +13,7 @@ class User {
     try{
       const token_id = await db.query("SELECT token_id FROM token WHERE Token = $1;",[token])
       const resp = await db.query("DELETE FROM token WHERE token_id = $1;",[token_id])
-      return resp;
+      return resp.rows.token_id;
     }
     catch{
       throw new Error("Unable to find token")
@@ -21,9 +21,9 @@ class User {
   }
   static async getToken (username){
     try{
-      const user_id = db.query("SELECT user_id from users WHERE username =$1;",[username])
+      const user_id = await db.query("SELECT user_id from users WHERE username =$1;",[username])
       const resp = db.query("SELECT Token FROM token WHERE user_id = $1;",[user_id])
-      return resp;
+      return (await resp).rows.token;
     }
     catch{
       throw new Error ("Unable to find token")
@@ -32,7 +32,7 @@ class User {
   static async GetIDByName(username){
     try{
       const resp = await db.query("SELECT user_id FROM users WHERE username = $1;",[username])
-      return resp;
+      return resp.rows.user_id;
     }
     catch{
       throw new Error("Unable to get")
@@ -103,7 +103,7 @@ class User {
       if (answer.rows.length == 0){
         return ("No Account")
       }
-      else ("Account exists")
+      throw new Error("Unable to check account")
     } 
     catch{
       throw new Error("Unable to check if user account exists")

@@ -10,7 +10,7 @@ class Card {
   static async getById(id){
     try{
       const resp = await db.query("SELECT * FROM cards WHERE card_id = $1",[id])
-      return resp;
+      return resp[0];
     }
     catch{
       throw new Error("Unable to get one by id")
@@ -19,6 +19,7 @@ class Card {
   static async getID(Card){
     try{
       const resp = await db.query("SELECT * FROM cards WHERE name = $1",[Card])
+      return resp.rows[0];
     }
     catch{
       throw new Error("Unable to get one id")
@@ -26,6 +27,7 @@ class Card {
   }
   static async GetAllByUserID(user){
     const resp = await db.query("SELECT * FROM deck_cards WHERE user_id = $1",[user])
+    return resp.map((e) => Card(e))
   }
    static async getCardByDeck(deckid,cardID){
     try{
@@ -33,7 +35,7 @@ class Card {
       if (resp.rows.length > 1){
         throw new Error ("move than one")
       }
-      return resp;
+      return resp.rows[0];
     }
     catch{
       throw new Error("Unable to get card")
@@ -55,7 +57,7 @@ class Card {
       const {question,description,answer} = data;
       try{
         const resp = db.query("UPDATE cards SET question = $1,description = $2, answer = $3 WHERE card_id = $4 RETURNING* ;",[question,description,answer,this.card_id])
-        return resp;
+        return resp.rows[0];
       }
       catch{
         throw new Error("Unable to change card content")
@@ -64,13 +66,15 @@ class Card {
     async Destroy (){
       try{
         const resp = await db.query("DELETE FROM cards WHERE card_id = $1",[this.card_id])
-        return resp;
+        if (resp.rows.length >1){
+        throw new Error("Unable to delete card")
+        }
+        return resp.rows[0];
       }
       catch{
         throw new Error("Unable to remove content")
       }
     }
-
   static async getByDeckId(deckId) {
     const { rows } = await db.query("SELECT c.card_id, c.question, c.description, c.answer FROM cards c JOIN deck_cards dc ON c.card_id = dc.card_id WHERE dc.deck_id = $1;",deckId);
     return rows.map((row) => new Card(row));

@@ -58,7 +58,6 @@ class Deck {
       text: 'INSERT INTO decks(name, user_id) VALUES ($1, $2) RETURNING deck_id;',
       values: [name, user_id],
     };
-
     try {
       const result = await db.query(query);
       this.deck_id = result.rows[0].deck_id;
@@ -78,7 +77,12 @@ class Deck {
     }
   }
   async destroy(){
-    const resp = await db.query("DELETE FROM deck WHERE deck_id = $1",[this.deck_id])
+    try{
+      const resp = await db.query("DELETE FROM deck WHERE deck_id = $1",[this.deck_id])
+    }
+    catch{
+      throw new Error("Unable to delete specific deck")
+    }
   }
  
 }
