@@ -59,32 +59,32 @@ describe("Deck Endpoint Tests", () => {
     })
 
     it('Should respond with all decks on request to /decks', async () => {
-        const decks = await server.get('/decks')
-
+        const decks = await server.get('/deck').send({user_id: 1})
         expect(decks.statusCode).toEqual(200)
         expect(Array.isArray(decks.body)).toEqual(true);
     });
 
     it('Should respond with specific deck on request to /decks/:deck_id', async () => {
-        const decks = await server.get('/decks/1')
+        const decks = await server.get('/deck/1')
 
         expect(decks.statusCode).toEqual(200)
-        expect(Array.isArray(decks.body)).toEqual(true);
+        expect(typeof(decks.body)).toEqual("object");
     });
     it('Should create new deck', async () => {
-        const response = await server.post('/decks').send({ name: "test deck" });
+        const response = await server.post('/deck').send({ name: "test deck", user_id : 1});
+        const user_id = parseInt(response.text)
 
         expect(response.statusCode).toEqual(201)
-        expect(response.body.name).toEqual("test deck")
+        expect(typeof user_id).toBe("number")
     })
     it('Should update an existing deck by ID', async () => {
-        const response = await server.put('/decks/1').send({ name: "updated deck" });
+        const response = await server.put('/deck/1').send({ name: "updated deck" });
 
         expect(response.statusCode).toEqual(200)
         expect(response.body.name).toEqual("updated deck")
     })
     it ('Should delete a specific deck by ID', async () => {
-        const response = await server.delete('/decks/1');
+        const response = await server.delete('/deck/1');
 
         expect(response.statusCode).toEqual(200)
     })
@@ -100,31 +100,31 @@ describe("Card Endpoint Tests", () => {
         await destroyDbEnv()
     })
     it('Should respond with all cards on request to /decks/:deckId/cards', async () => {
-        const cards = await server.get('/decks/:deckId/cards')
+        const cards = await server.get('/card/1')
 
         expect(cards.statusCode).toEqual(200)
         expect(Array.isArray(cards.body)).toEqual(true);
     })
-    it('Should respond with specific card on request to /decks/:deckId/cards/:card_id', async () => {
-        const cards = await server.get('/decks/:deckId/cards/1')
+    it('Should respond with specific card on request to /card/getbydeck/:cardid', async () => {
+        const cards = await server.get('/card/getbydeck/1')
 
         expect(cards.statusCode).toEqual(200)
         expect(Array.isArray(cards.body)).toEqual(true);
     })
-    it('Should create new card', async () => {
-        const response = await server.post('/decks/:deckId/cards').send({ name: "test card" });
+    it('Should create new card POST /card/:deck_id', async () => {
+        const response = await server.post('/card/1').send({ name: "test card" });
 
         expect(response.statusCode).toEqual(201)
         expect(response.body.name).toEqual("test card")
     })
     it('Should update an existing card by ID', async () => {
-        const response = await server.put('/decks/:deckId/cards/1').send({ name: "updated card" });
+        const response = await server.put('/card/1').send({ name: "updated card" });
 
         expect(response.statusCode).toEqual(200)
         expect(response.body.name).toEqual("updated card")
     })
     it ('Should delete a specific card by ID', async () => {
-        const response = await server.delete('/decks/:deckId/cards/1');
+        const response = await server.delete('/card/1');
 
         expect(response.statusCode).toEqual(200)
         

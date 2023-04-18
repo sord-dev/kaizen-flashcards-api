@@ -9,7 +9,13 @@ CREATE TABLE users (
   password VARCHAR(255),
   UNIQUE (user_id)
 );
-
+CREATE TABLE token (
+  token_id INT GENERATED ALWAYS AS IDENTITY,
+  Token VARCHAR(255) UNIQUE,
+  user_id INT NOT NULL,
+  PRIMARY Key (token_id),
+  FOREIGN KEY (user_id) REFERENCES users
+);
 CREATE TABLE decks (
   deck_id  INT GENERATED ALWAYS AS IDENTITY,
   name VARCHAR(255),
@@ -18,7 +24,6 @@ CREATE TABLE decks (
   FOREIGN KEY (user_id) REFERENCES users(user_id),
    UNIQUE (deck_id)
 );
-
 CREATE TABLE cards(
     card_id INT GENERATED ALWAYS AS IDENTITY,
     question VARCHAR(255) NOT NULL,
@@ -26,7 +31,6 @@ CREATE TABLE cards(
     answer VARCHAR(255) NOT NULL,
     UNIQUE (card_id)
 );
-
 CREATE TABLE deck_cards (
   id  INT GENERATED ALWAYS AS IDENTITY,
   deck_id INT,
@@ -34,6 +38,15 @@ CREATE TABLE deck_cards (
   FOREIGN KEY (deck_id) REFERENCES decks(deck_id),
   FOREIGN KEY (card_id) REFERENCES cards(card_id),
   UNIQUE (id)
+);
+CREATE TABLE user_Question_dif(
+  question_dif_id INT GENERATED ALWAYS AS IDENTITY,
+  difficulty VARCHAR(255),
+  user_id INT NOT NULL,
+  card_id INT NOT NULL,
+  PRIMARY KEY (question_dif_id),
+  FOREIGN KEY (card_id) REFERENCES cards(card_id),
+  FOREIGN KEY (user_id) REFERENCES users(user_id)
 );
 
 -- Insert a user

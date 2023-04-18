@@ -1,4 +1,4 @@
-const User = require('../models/User.js')
+const User = require('../models/user.js')
 
 module.exports.login = async (req, res) => {
     let { body } = req;
@@ -18,7 +18,6 @@ module.exports.login = async (req, res) => {
         res.status(401).json({ error: error.message })
     }
 }
-
 module.exports.register = async (req, res) => {
     const { body } = req;
   
