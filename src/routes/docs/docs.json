@@ -1,0 +1,31 @@
+{
+  "/ <-- you are here": {
+    "/auth": [
+      { "POST /login": "log into your account" },
+      { "POST /register": "create an account" },
+      { "POST /logout": "logout of your account" }
+    ],
+    "/deck": [
+      { "GET /": "get all decks" },
+      { "GET /:deck_id": "get a specific deck with decks" },
+      {
+        "POST /": "create deck",
+        "body": {
+          "name": "string",
+          "user_id": "number"
+        }
+      }
+    ],
+    "/card": [
+      { "GET /:deck_id/:card_id": "get a specific card from a deck" },
+      {
+        "POST /:deck_id": "create a card for a deck",
+        "body": {
+          "question": "string",
+          "answer": "string",
+          "description": "string"
+        }
+      }
+    ]
+  }
+}
