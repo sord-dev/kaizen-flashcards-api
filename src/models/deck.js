@@ -20,6 +20,7 @@ class Deck {
 
   }
   static async getAll(user_id) {
+    
     const query = {
       text: 'SELECT * FROM decks WHERE user_id = $1',
       values: [user_id],
@@ -27,6 +28,8 @@ class Deck {
     try {
       const result = await db.query(query);
       const decks = result.rows.map(row => new Deck(row.deck_id, row.name, row.user_id));
+
+    
       return decks;
     } catch (err) {
       console.error('Error getting decks:', err);
