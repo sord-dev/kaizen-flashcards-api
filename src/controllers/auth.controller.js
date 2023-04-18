@@ -18,7 +18,6 @@ module.exports.login = async (req, res) => {
         res.status(401).json({ error: error.message })
     }
 }
-
 module.exports.register = async (req, res) => {
     const { body } = req;
   
