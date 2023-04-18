@@ -34,10 +34,10 @@ const createDeck = async(req,res)=>{
     }
 }
 
-const nameChange =async(req,res)=>{
+const updateDeck =async(req,res)=>{
     try{
         const deckID = await Deck.getById(parseInt(req.params.id));
-        const resp =await  deckID.update(req.body);
+        const resp =await deckID.update(req.body);
         res.status(200).json(resp)
     }
     catch(e){
@@ -62,7 +62,7 @@ const remove = async(req,res)=>{
 module.exports = {
     allByID,
     createDeck,
-    nameChange,
+    updateDeck,
     remove,
     getDeckById
 }

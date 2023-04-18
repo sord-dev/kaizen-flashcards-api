@@ -4,7 +4,7 @@ const Deck = require("../models/deck")
 
 async function getAll(req, res) {
     try {
-        const id = parseInt(req.params.card_id)
+        const id = parseInt(req.params.deck_id)
         const resp = await Card.getByDeckId(id)
         res.status(200).json(resp);
     }
