@@ -9,7 +9,6 @@ module.exports.login = async (req, res) => {
         const validPw = await User.comparePassword(body.password, user.password);
         const token = User.createUserToken()
         User.addToken(token)
-
         if (validPw) {
             // check user streak
             res.status(200).json({ ...user, password: null,token:token })

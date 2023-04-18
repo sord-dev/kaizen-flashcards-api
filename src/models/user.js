@@ -38,10 +38,9 @@ class User {
       throw new Error("Unable to get")
     }
   }
-  async addToken(token){
+  static async addToken(token){
     try{
       const resp = await db.query("INSERT INTO Token(token) VALUES($1);",[token])
-      return hashed;
     }
     catch{throw new Error ("Unable to insert token")}
   }
