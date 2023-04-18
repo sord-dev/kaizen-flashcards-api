@@ -11,6 +11,7 @@ app.use(morgan('dev'));
 app.use(cors())
 
 app.use('/', require('./routes/api.route'));
+
 app.use((req, res, next) => {
   next(createError.NotFound());
 });

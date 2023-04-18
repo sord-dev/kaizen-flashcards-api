@@ -27,11 +27,12 @@ module.exports.register = async (req, res) => {
       // hash user password and save
       let hashed = await User.hashPassword(usr.password);
       usr.password = hashed;
-      await usr.save();
+      const saved = await usr.save();
 
+      console.log(saved);
       // create and assign user streak
   
-      return res.status(201).json({ ...usr, password: null });
+      return res.status(201).json({ ...saved, password: null });
     } catch (error) {
       return res.status(400).json({ error: error.message });
     }

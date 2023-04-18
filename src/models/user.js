@@ -9,41 +9,41 @@ class User {
     this.username = username;
     this.password = password;
   }
-  static async findTokenAndDelete(token){
-    try{
-      const token_id = await db.query("SELECT token_id FROM token WHERE Token = $1;",[token])
-      const resp = await db.query("DELETE FROM token WHERE token_id = $1;",[token_id])
+  static async findTokenAndDelete(token) {
+    try {
+      const token_id = await db.query("SELECT token_id FROM token WHERE Token = $1;", [token])
+      const resp = await db.query("DELETE FROM token WHERE token_id = $1;", [token_id])
       return resp.rows.token_id;
     }
-    catch{
+    catch {
       throw new Error("Unable to find token")
     }
   }
-  static async getToken (username){
-    try{
-      const user_id = await db.query("SELECT user_id from users WHERE username =$1;",[username])
-      const resp = db.query("SELECT Token FROM token WHERE user_id = $1;",[user_id])
+  static async getToken(username) {
+    try {
+      const user_id = await db.query("SELECT user_id from users WHERE username =$1;", [username])
+      const resp = db.query("SELECT Token FROM token WHERE user_id = $1;", [user_id])
       return (await resp).rows.token;
     }
-    catch{
-      throw new Error ("Unable to find token")
+    catch {
+      throw new Error("Unable to find token")
     }
   }
-  static async GetIDByName(username){
-    try{
-      const resp = await db.query("SELECT user_id FROM users WHERE username = $1;",[username])
+  static async GetIDByName(username) {
+    try {
+      const resp = await db.query("SELECT user_id FROM users WHERE username = $1;", [username])
       return resp.rows.user_id;
     }
-    catch{
+    catch {
       throw new Error("Unable to get")
     }
   }
-  async addToken(token){
-    try{
-      const resp = await db.query("INSERT INTO Token(token) VALUES($1);",[token])
+  async addToken(token) {
+    try {
+      const resp = await db.query("INSERT INTO Token(token) VALUES($1);", [token])
       return hashed;
     }
-    catch{throw new Error ("Unable to insert token")}
+    catch { throw new Error("Unable to insert token") }
   }
   static async find() {
     let res = await db.query("SELECT * FROM users;");
@@ -55,7 +55,7 @@ class User {
     return res.rows.map((u) => new User(u));
   }
 
-  static async createUserToken(){
+  static async createUserToken() {
     return uuid(5);
   }
   static async findByUsername(username) {
@@ -71,12 +71,12 @@ class User {
     return new User(res.rows[0]);
   }
 
-  static async findUserIdByToken (token) {
-    try{
-      const user_id = await db.query("SELECT user_id FROM token WHERE Token = $1",[token])
+  static async findUserIdByToken(token) {
+    try {
+      const user_id = await db.query("SELECT user_id FROM token WHERE Token = $1", [token])
       return user_id.rows[0];
     }
-    catch{
+    catch {
       throw new Error("Unable to find a user with that token")
     }
   }
@@ -91,15 +91,15 @@ class User {
 
     return valid;
   }
-  static async CheckUserAccount(username,password){
-    try{
-      const answer = await db.query("SELECT * FROM users WHERE username = $1 AND password = $2",[username,password])
-      if (answer.rows.length == 0){
+  static async CheckUserAccount(username, password) {
+    try {
+      const answer = await db.query("SELECT * FROM users WHERE username = $1 AND password = $2", [username, password])
+      if (answer.rows.length == 0) {
         return ("No Account")
       }
       throw new Error("Unable to check account")
-    } 
-    catch{
+    }
+    catch {
       throw new Error("Unable to check if user account exists")
     }
   }
@@ -112,7 +112,7 @@ class User {
     if (response.rowCount == 0) {
       throw new Error("Save Error");
     } else {
-      return { message: "Created" };
+      return new User(response.rows[0]);
     }
   }
 }
