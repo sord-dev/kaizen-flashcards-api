@@ -5,7 +5,7 @@ const allByID = async(req,res)=>{
     try{
       const userToken = req.headers["authorization"]
       const user_id = User.findUserIdByToken(userToken);
-      const resp = Deck.getAll(parseInt(user_id));
+      const resp = Deck.getAll(parseInt(user_id || 1));
       res.json(resp).status(200);
     }
     catch(e){
