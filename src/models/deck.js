@@ -6,7 +6,18 @@ class Deck {
     this.name = name;
     this.user_id = user_id;
   }
+  static async doesDeckidExist(deckid){
+    try{
+      const resp = await db.query("SELECT * FROM decks WHERE deck_id = $1",[deckid])
+      if (resp.rows.length > 1){
+        return "Unable to find deck"
+      }
+    }
+    catch{
+      throw new Error ("Unable to run deck")
+    }
 
+  }
   static async getAll(user_id) {
     const query = {
       text: 'SELECT * FROM decks WHERE user_id = $1',

@@ -1,5 +1,6 @@
 const Card = require("../models/card");
 const User = require("../models/user");
+const Deck = require ("../models/deck")
 async function getAll(req,res){
     try{
         const id = parseInt(req.params.cardid)
@@ -46,6 +47,7 @@ const remove = async(req,res) =>{
     try{
         const RemovingContent = await Card.getById(parseInt(req.params.cardid));
         const resp = RemovingContent.Destroy()
+        res.status(200)
     }
     catch{
         throw new Error("Unable to remove")

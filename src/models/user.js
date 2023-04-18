@@ -1,6 +1,7 @@
 const db = require("../database/postgres.db.js");
 const bcrypt = require("bcrypt");
-import { nanoid } from "nanoid";
+const { uuid } = require("uuid");
+
 
 class User {
   constructor({ user_id, username, password }) {
@@ -55,8 +56,7 @@ class User {
   }
 
   static async createUserToken(){
-    return nanoid(5);
-
+    return uuid(5);
   }
   static async findByUsername(username) {
     let res = await db.query(
