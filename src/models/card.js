@@ -44,6 +44,7 @@ class Card {
     const {question,description,answer} = data;
     const createCard = await db.query("INSERT INTO cards(question, description, answer) VALUES($1, $2, $3) RETURNING card_id;",[question,description,answer]);
     if(!createCard.rowCount) throw new Error('Card creation error.')
+    
 
     let card_id = createCard.rows[0].card_id;
     const { rowCount } = await db.query('INSERT INTO deck_cards(deck_id, card_id) VALUES($1, $2) RETURNING card_id;',[deckid,card_id]);

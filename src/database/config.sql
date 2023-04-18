@@ -39,6 +39,15 @@ CREATE TABLE deck_cards (
   FOREIGN KEY (card_id) REFERENCES cards(card_id),
   UNIQUE (id)
 );
+CREATE TABLE user_Question_dif(
+  question_dif_id INT GENERATED ALWAYS AS IDENTITY,
+  difficulty VARCHAR(255),
+  user_id INT NOT NULL,
+  card_id INT NOT NULL,
+  PRIMARY KEY (question_dif_id),
+  FOREIGN KEY (card_id) REFERENCES cards(card_id),
+  FOREIGN KEY (user_id) REFERENCES users(user_id)
+);
 
 -- Insert a user
 INSERT INTO users (username, password) VALUES ('admin', 'admin');

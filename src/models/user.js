@@ -71,6 +71,16 @@ class User {
     return new User(res.rows[0]);
   }
 
+  static async findUserIdByToken (token){
+    try{
+      const user_id = await db.query("SELECT user_id FROM token WHERE Token = $1",[token])
+      return user_id;
+    }
+    catch{
+      throw new Error("Unable to find a user with that token")
+    }
+  }
+
   static async hashPassword(password) {
 
     const salt = await bcrypt.genSalt();

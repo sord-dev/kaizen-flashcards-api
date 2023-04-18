@@ -1,4 +1,5 @@
 const Card = require("../models/card");
+const User = require("../models/user");
 async function getAll(req,res){
     try{
         const id = parseInt(req.params.cardid)
@@ -22,7 +23,9 @@ const oneCardFromOneDeck = async(req,res)=>{
 }
 const NewCard = async(req,res) =>{
     try{
-        const resp = await Card.createNew(req.body);
+        const token = req.headers['authorization']
+        const user_id = User.findUserIdByToken(token)
+        const resp = await Card.createNew(req.body,user_id);
         res.json(resp).status(200);
     }
     catch{
