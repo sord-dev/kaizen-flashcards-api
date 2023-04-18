@@ -1,12 +1,11 @@
 const Deck = require("../models/deck");
 const User = require("../models/user");
 
-const allByID = async(req,res)=>{
+const allByID = async(req, res) => {
+    console.log("AGGGGHHH ", req.body);
     try{
-      const userToken = req.headers["authorization"]
-      const user_id = User.findUserIdByToken(userToken);
-      const resp = Deck.getAll(parseInt(user_id || 1));
-      res.json(resp).status(200);
+      const resp = await Deck.getAll(req.body.user_id);
+      res.status(200).json(resp);
     }
     catch(e){
         res.status(404).json({message: e.message})
