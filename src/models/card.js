@@ -41,10 +41,6 @@ class Card {
   }
 
   static async saveToDeck(data,deckid) {
-    const check = await db.query("SELECT * FROM decks WHERE deck_id = $1",[deckid])
-    if (check.rows.length >1){
-      return false;
-    }
     const {question,description,answer} = data;
     const createCard = await db.query("INSERT INTO cards(question, description, answer) VALUES($1, $2, $3) RETURNING card_id;",[question,description,answer]);
     if(!createCard.rowCount) throw new Error('Card creation error.')

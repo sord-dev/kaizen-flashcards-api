@@ -25,6 +25,7 @@ const oneCardFromOneDeck = async(req,res)=>{
 const NewCard = async(req,res) =>{
     try{
         const token = req.headers['authorization']
+        const checker = Deck.doesDeckidExist(req.body.deckid)
         const user_id = User.findUserIdByToken(token)
         const resp = await Card.createNew(req.body,user_id);
         res.json(resp).status(200);
