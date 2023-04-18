@@ -3,7 +3,7 @@ const authRouter = require('./auth.route.js')
 
 const Deck = require('../models/Deck.js')
 
-router.use('/auth', authRouter)
+router.get('/', (_, res) => res.json(require('./docs/docs.json')))
 
 router.get('/decks', async (req, res, next) => {
   try {
@@ -15,6 +15,7 @@ router.get('/decks', async (req, res, next) => {
   }
 });
 
+router.use('/auth', authRouter)
 
 
 module.exports = router;
