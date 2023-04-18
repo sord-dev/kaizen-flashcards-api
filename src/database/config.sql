@@ -43,7 +43,7 @@ CREATE TABLE deck_cards (
 );
 
 -- Insert a user
-INSERT INTO users (username, password) VALUES ('admin', 'admin');
+INSERT INTO users (username, password) VALUES ('admin', '$2b$10$/QzbJnjbKX7Bgma7L9DfGu3wRMKFMfCtc.Jekyh3PbxDoSjuPEngm');
 
 -- Insert a deck created by user 1
 INSERT INTO decks (name, user_id) VALUES ('Kanji', 1);
