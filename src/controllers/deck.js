@@ -19,7 +19,7 @@ const getDeckById = async (req, res) => { // now returns deck and cards to deck
         const deckCards = await Card.getByDeckId(id);
         res.status(200).json({ ...deck, cards: deckCards });
     } catch (error) {
-        res.status(404).json({ message: e.message })
+        res.status(404).json({ message: error.message })
     }
 }
 
@@ -50,7 +50,6 @@ const remove = async (req, res) => {
     try {
         const deckID = await Deck.getById(parseInt(req.params.id));
         const removing = await deckID.destroy()
-        console.log(removing)
 
         res.status(200).json({ deleted: removing })
     }
