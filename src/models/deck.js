@@ -1,5 +1,4 @@
 const db = require("../database/postgres.db.js");
-const Card = require("./card.js");
 
 class Deck {
   constructor(deck_id, name, user_id) {
@@ -31,7 +30,6 @@ class Deck {
       text: 'SELECT * FROM decks WHERE deck_id = $1',
       values: [deck_id],
     };
-
     try {
       const result = await db.query(query);
       if (!result.rowCount) {
