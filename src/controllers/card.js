@@ -36,10 +36,8 @@ const NewCard = async (req, res) => {
 }
 const updateCard = async (req, res) => {
     try {
-        const updatingCard = await Card.getCardByDeck(parseInt(req.params.card_id), parseInt(req.params.deck_id));
-        console.log(updateCard);
-        const resp = await updatingCard.changeContent(req.body);
-
+       // const updatingCard = await Card.getCardByDeck(parseInt(req.params.card_id), parseInt(req.params.deck_id));
+        const resp = await Card.changeContent(req.body,req.params.card_id);
         res.status(200).json(resp)
     }
     catch(e) {
@@ -51,7 +49,7 @@ const remove = async (req, res) => {
     try {
         // returning array rather than single object
         const RemovingContent = await Card.getById(parseInt(req.params.card_id));
-        const resp = await RemovingContent.Destroy()
+        const resp = await RemovingContent.Destroy(req.params.card_id)
 
         res.status(200).json(resp)
     }

@@ -9,10 +9,12 @@
       { "POST /": "get all decks for user", "body": { "user_id": "number" } },
       { "GET /:deck_id": "get a specific deck with cards" },
       {
-        "POST /new": "create deck",
+        "POST /string": "create deck",
+        "headers": {
+          "authorization": "token"
+        },
         "body": {
-          "name": "string",
-          "user_id": "number"
+          "name": "string"   
         }
       },
       { "DELETE /:deck_id": "delete deck" },
@@ -26,9 +28,12 @@
       }
     ],
     "/card": [
-      { "GET /getbydeck/:deck_id": "get a specific card from a deck" },
+      { "GET /:card_id": "get a specific card from a deck" },
       {
-        "POST /:deck_id": "create a card for a deck",
+        "POST getbydeck/:deck_id": "create a card for a deck",
+        "headers": {
+          "authorization": "token"
+        },
         "body": {
           "question": "string",
           "answer": "string",
@@ -36,7 +41,10 @@
         }
       },
       {
-        "PATCH /:deck_id/:card_id": "update a card from a deck",
+        "PATCH /:card_id": "update a card from a deck",
+        "headers": {
+          "authorization": "token"
+        },
         "body": {
           "question": "string",
           "answer": "string",
@@ -44,7 +52,7 @@
         }
       },
       {
-        "DELETE /:card_id": "delete a card"
+        "DELETE /:card_id": "delete a card from a deck"
       }
     ]
   }
