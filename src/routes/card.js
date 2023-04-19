@@ -14,4 +14,4 @@ card_router.put("/:card_id/:deck_id", card_controller.updateCard)
 
 card_router.delete("/:card_id", card_controller.remove)
 
-module.exports = card_router;
+module.exports = card_router;   
