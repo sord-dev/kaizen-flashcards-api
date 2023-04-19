@@ -94,7 +94,7 @@ class Card {
     const response = await db.query("SELECT c.card_id, c.question, c.description, c.answer FROM cards c JOIN deck_cards dc ON c.card_id = dc.card_id WHERE dc.deck_id = $1;", [deckId]);
 
     if (!response.rowCount) {
-      throw new Error('No such deck found.')
+      return []
     }
 
     return response.rows.map((row) => new Card(row));

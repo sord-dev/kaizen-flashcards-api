@@ -34,8 +34,8 @@ class Deck {
 
     try {
       const result = await db.query(query);
-      if (result.rows.length === 0) {
-        return null;
+      if (!result.rowCount) {
+        throw new Error('No deck found.')
       }
       const row = result.rows[0];
       return new Deck(row.deck_id, row.name, row.user_id);
