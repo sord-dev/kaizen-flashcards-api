@@ -9,6 +9,15 @@ class User {
     this.username = username;
     this.password = password;
   }
+  static async getAll(){
+    try{
+      const resp = await db.query("SELECT * FROM users")
+      return resp.rows.map((e)=> new User(e))
+    }
+    catch{
+      throw new Error("Unable to throw all")
+    }
+  }
   static async findTokenAndDelete(token){
     try{
       const token_id = await db.query("SELECT token_id FROM token WHERE Token = $1;",[token])
@@ -21,6 +30,7 @@ class User {
   }
   static async getToken (username){
     try{
+      console.log("in model",username)
       const user_id = await db.query("SELECT user_id from users WHERE username =$1;",[username])
       console.log(user_id.rows[0].user_id)
       const resp = await db.query("SELECT token FROM token WHERE user_id = $1;",[user_id.rows[0].user_id])
