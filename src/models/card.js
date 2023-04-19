@@ -67,8 +67,7 @@ class Card {
     static async changeContent (data,card_id){
       const {question,description,answer} = data;
       try{
-        const resp = await db.query("UPDATE cards SET question = $1,description = $2, answer = $3 WHERE card_id = $4 RETURNING* ;",[question,description,answer,card_id])
-        console.log(resp)
+        const resp = await db.query("UPDATE cards SET question = $1,description = $2, answer = $3 WHERE card_id = $4 RETURNING* ;",[question,description,answer,card_id]);
         return resp.rows[0];
       }
       catch{
