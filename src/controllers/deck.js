@@ -2,11 +2,9 @@ const Deck = require("../models/deck");
 const Card = require("../models/card");
 const User = require("../models/user");
 
-const allByID = async (req, res) => {
+const allByID = async (req, res) => { 
     try {
-        const user_id = await User.findUserIdByToken(req.headers['authorization'])
-        console.log(user_id)
-        const resp = await Deck.getAll(parseInt(user_id.user_id));
+        const resp = await Deck.getAll(parseInt(req.body.user_id));
         res.status(200).json(resp);
     }
     catch (e) {
@@ -27,7 +25,7 @@ const getDeckById = async (req, res) => { // now returns deck and cards to deck
 
 const createDeck = async (req, res) => {
     try {
-        const user_id = await User.findUserIdByToken(req.headers['authorization'])
+        const user_id = parseInt(req.body.user_id)
     
         const resp = await Deck.save(req.body.name, user_id)
 
