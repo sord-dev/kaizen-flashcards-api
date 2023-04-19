@@ -13,6 +13,7 @@ const populateDbEnv = async () => {
     await db.query("INSERT INTO pg_temp.decks (name, user_id) VALUES ('Kanji', 1)")
     await db.query("INSERT INTO pg_temp.cards (question, answer, description) VALUES ('亜', 'Sub-', 'The kanji for the prefix \"sub\" in Japanese'), ('逆', 'Reverse', 'The kanji for \"reverse\" or \"opposite\" in Japanese'), ('駆', 'Rush', 'The kanji for \"rush\" or \"gallop\" in Japanese'),('妙', 'Wonderful', 'The kanji for wonderful or marvelous in Japanese'), ('憂', 'Grief', 'The kanji for \"grief\" or \"sorrow\" in Japanese');");
     await db.query("INSERT INTO pg_temp.deck_cards (deck_id, card_id) VALUES (1, 1),(1, 2), (1, 3), (1, 4), (1, 5)")
+    await db.query("INSERT INTO pg_temp.token (user_id, token) VALUES (1, '24a276d6-990e-458f-9575-8c76cceb8ea6')")
 }
 
 const destroyDbEnv = async () => {
