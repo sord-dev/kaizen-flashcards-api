@@ -1,56 +1,63 @@
 const Card = require("../models/card");
-//const User = require("../models/user");
-//const Deck = require ("../models/deck")
+const User = require("../models/user");
+const Deck = require("../models/deck")
 
-async function getAll(req,res){
-    try{
-        const id = parseInt(req.params.card_id)
+async function getAll(req, res) {
+    try {
+        const id = parseInt(req.params.deck_id)
         const resp = await Card.getByDeckId(id)
         res.status(200).json(resp);
     }
-    catch(error) {
+    catch (error) {
         console.log(error);
-        res.status(404).json({ message: error.message  })
+        res.status(404).json({ message: error.message })
     }
 }
-const oneCardFromOneDeck = async(req,res)=>{
-    try{
-        const resp = await Card.getByDeckId(parseInt(req.params.deckid))
+
+const oneCardFromOneDeck = async (req, res) => {
+    try {
+        const resp = await Card.getByDeckId(parseInt(req.params.deck_id))
+
         res.status(200).json(resp);
     }
-    catch{
-        throw new Error("Unable to get one card from one deck")
+    catch (error) {
+        res.status(404).json({ message: error.message });
     }
 }
-const NewCard = async(req,res) =>{
-    try{
-             const resp = await Card.saveToDeck(req.body,parseInt(req.params.deck_id));
-             console.log("After create");
-             res.json(resp).status(201);
+const NewCard = async (req, res) => {
+    try {
+        const resp = await Card.saveToDeck(req.body, parseInt(req.params.deck_id));
+        console.log("After create");
+        res.status(201).json(resp);
     }
-    catch(e){
-        res.status(404).json({message : e.message})
+    catch (e) {
+        res.status(404).json({ message: e.message })
     }
 }
-const updateCard = async(req,res) =>{
-    try{
-        const updatingCard = await Card.getById(parseInt(req.params.card_id));
-        const resp = await Card.changeContent(req.body,updatingCard.card_id);
+const updateCard = async (req, res) => {
+    try {
+        const updatingCard = await Card.getCardByDeck(parseInt(req.params.card_id), parseInt(req.params.deck_id));
+        console.log(updateCard);
+        const resp = await updatingCard.changeContent(req.body);
+
         res.status(200).json(resp)
     }
-    catch(e){
-        res.json({message : e.message})
+    catch(e) {
+        console.log(e);
+        res.status(404).json({ message: e.message })
     }
 }
-const remove = async(req,res) =>{
-    try{
+const remove = async (req, res) => {
+    try {
+        // returning array rather than single object
         const RemovingContent = await Card.getById(parseInt(req.params.card_id));
-        console.log(RemovingContent)
-        const resp = Card.Destroy(RemovingContent.card_id)
-        res.status(200)
+        const resp = await RemovingContent.Destroy()
+
+        res.status(200).json(resp)
     }
-    catch{
-        throw new Error("Unable to remove")
+    catch(e) {
+        console.log(e);
+        res.status(404).json({ message: e.message })
     }
 }
 module.exports = {

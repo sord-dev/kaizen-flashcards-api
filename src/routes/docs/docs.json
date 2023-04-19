@@ -6,8 +6,8 @@
       { "POST /logout": "logout of your account" }
     ],
     "/deck": [
-      { "GET /": "get all decks" },
-      { "GET /:deck_id": "get a specific deck with decks" },
+      { "POST /": "get all decks for user", "body": { "user_id": "number" } },
+      { "GET /:deck_id": "get a specific deck with cards" },
       {
         "POST /string": "create deck",
         "headers": {
@@ -15,6 +15,15 @@
         },
         "body": {
           "name": "string"   
+        }
+      },
+      { "DELETE /:deck_id": "delete deck" },
+      {
+        "PUT /:deck_id": "update deck",
+        "body": {
+          "answer": "string",
+          "description": "string",
+          "name": "string"
         }
       }
     ],

@@ -1,4 +1,5 @@
 const db = require("../database/postgres.db.js");
+const Card = require("./card.js");
 
 class Deck {
   constructor(deck_id, name, user_id) {
@@ -6,19 +7,9 @@ class Deck {
     this.name = name;
     this.user_id = user_id;
   }
-  static async doesDeckidExist(deckid){
-    try{
-      const resp = await db.query("SELECT * FROM decks WHERE deck_id = $1",[deckid])
-      if (resp.rows.length > 1){
-        return true;
-      }
-    }
-    catch{
-      throw new Error ("Unable to run deck")
-    }
-
-  }
+  
   static async getAll(user_id) {
+    
     const query = {
       text: 'SELECT * FROM decks WHERE user_id = $1',
       values: [user_id],
@@ -26,6 +17,8 @@ class Deck {
     try {
       const result = await db.query(query);
       const decks = result.rows.map(row => new Deck(row.deck_id, row.name, row.user_id));
+
+    
       return decks;
     } catch (err) {
       console.error('Error getting decks:', err);

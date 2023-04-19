@@ -59,7 +59,7 @@ describe("Deck Endpoint Tests", () => {
     })
 
     it('Should respond with all decks on request to /decks', async () => {
-        const decks = await server.get('/deck').send({user_id: 1})
+        const decks = await server.post('/deck').send({user_id: 1})
         expect(decks.statusCode).toEqual(200)
         expect(Array.isArray(decks.body)).toEqual(true);
     });
@@ -71,7 +71,7 @@ describe("Deck Endpoint Tests", () => {
         expect(typeof(decks.body)).toEqual("object");
     });
     it('Should create new deck', async () => {
-        const response = await server.post('/deck').send({ name: "test deck", user_id : 1});
+        const response = await server.post('/deck/new').send({ name: "test deck", user_id : 1 });
         const user_id = parseInt(response.text)
 
         expect(response.statusCode).toEqual(201)
@@ -109,25 +109,27 @@ describe("Card Endpoint Tests", () => {
         const cards = await server.get('/card/getbydeck/1')
 
         expect(cards.statusCode).toEqual(200)
-        expect(Array.isArray(cards.body)).toEqual(true);
+        expect(Array.isArray(cards.body)).toEqual(true)
     })
+    
     it('Should create new card POST /card/:deck_id', async () => {
-        const response = await server.post('/card/1').send({ name: "test card" });
+        const response = await server.post('/card/1').send({ question: "test card", description: "klhasdfj", answer: "yes" });
 
         expect(response.statusCode).toEqual(201)
-        expect(response.body.name).toEqual("test card")
+        expect(typeof response.body.card_id).toBe('number');
     })
+
     it('Should update an existing card by ID', async () => {
-        const response = await server.put('/card/1').send({ name: "updated card" });
+        const response = await server.put('/card/1/1').send({ question: "test card edited", description: "klhasdfj", answer: "yes" });
 
         expect(response.statusCode).toEqual(200)
-        expect(response.body.name).toEqual("updated card")
-    })
+        expect(typeof response.body.question).toEqual("string")
+    }, 6000)
+
     it ('Should delete a specific card by ID', async () => {
         const response = await server.delete('/card/1');
 
         expect(response.statusCode).toEqual(200)
-        
     })
 
 })

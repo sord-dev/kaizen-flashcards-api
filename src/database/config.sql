@@ -1,12 +1,15 @@
-DROP TABLE IF EXISTS deck_cards;
-DROP TABLE IF EXISTS cards;
-DROP TABLE IF EXISTS decks;
-DROP TABLE IF EXISTS users;
+DROP TABLE IF EXISTS deck_cards CASCADE;
+DROP TABLE IF EXISTS cards CASCADE;
+DROP TABLE IF EXISTS decks CASCADE;
+DROP TABLE IF EXISTS users CASCADE;
+DROP TABLE IF EXISTS token CASCADE;
+DROP TABLE IF EXISTS user_question_dif CASCADE;
 
 CREATE TABLE users (
   user_id  INT GENERATED ALWAYS AS IDENTITY,
   username VARCHAR(255) UNIQUE,
   password VARCHAR(255),
+  PRIMARY KEY (user_id),
   UNIQUE (user_id)
 );
 CREATE TABLE token (
@@ -39,7 +42,7 @@ CREATE TABLE deck_cards (
   FOREIGN KEY (card_id) REFERENCES cards(card_id),
   UNIQUE (id)
 );
-CREATE TABLE user_Question_dif(
+CREATE TABLE user_question_dif(
   question_dif_id INT GENERATED ALWAYS AS IDENTITY,
   difficulty VARCHAR(255),
   user_id INT NOT NULL,

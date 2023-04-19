@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node .",
     "dev": "nodemon .",
-    "test": "jest -verbose --force-exit --all",
+    "test": "jest --verbose --force-exit --all",
     "coverage": "jest --coverage --force-exit",
     "setup-db": "node ./src/database/setup.js"
   },
@@ -16,6 +16,7 @@
   "dependencies": {
     "bcrypt": "^5.1.0",
     "cors": "^2.8.5",
+    "dayjs": "^1.11.7",
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
     "http-errors": "^2.0.0",

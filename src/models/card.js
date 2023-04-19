@@ -7,45 +7,43 @@ class Card {
     this.description = description;
     this.answer = answer;
   }
-  static async getById(id){
-    try{
-      const resp = await db.query("SELECT * FROM cards WHERE card_id = $1",[id])
-      return resp.rows[0];
+  static async getById(id) {
+    try {
+      const resp = await db.query("SELECT * FROM cards WHERE card_id = $1 LIMIT 1;", [id])
+
+      return new Card(resp.rows[0]);
     }
-    catch{
+    catch {
       throw new Error("Unable to get one by id")
     }
   }
-  static async getID(Card){
-    try{
-      const resp = await db.query("SELECT * FROM cards WHERE name = $1",[Card])
-      return resp.rows[0];
+  static async getID(Card) {
+    try {
+      const resp = await db.query("SELECT * FROM cards WHERE name = $1", [Card])
+      return new Card(resp.rows[0]);
     }
-    catch{
+    catch {
       throw new Error("Unable to get one id")
     }
   }
-  static async GetAllByUserID(user){
-    const resp = await db.query("SELECT * FROM deck_cards WHERE user_id = $1",[user])
+  static async GetAllByUserID(user) {
+    const resp = await db.query("SELECT * FROM deck_cards WHERE user_id = $1", [user])
     return resp.map((e) => Card(e))
   }
-   static async getCardByDeck(deckid,cardID){
-    try{
-      const resp = await db.query("SELECT * FROM cards JOIN deck_cards dc ON dc.card_id = cards.card_id JOIN decks ON dc.deck_id = decks.deck_id WHERE deck_id =$1 and card_id = $2",[deckid,cardID])
-      if (resp.rows.length > 1){
-        throw new Error ("move than one")
-      }
-      return resp.rows[0];
-    }
-    catch(e){
-      throw Error({message : e.message})
-    }
+
+  static async getCardByDeck(deckid, cardID) {
+    const resp = await db.query("SELECT * FROM cards JOIN deck_cards dc ON dc.card_id = cards.card_id JOIN decks ON dc.deck_id = decks.deck_id WHERE decks.deck_id = $1 and cards.card_id = $2", [deckid, cardID])
+
+    console.log("UPDATEING", resp.rows);
+
+    return new Card(resp.rows[0]);
+
   }
 
-  static async saveToDeck(data,deckId) {
-    const {question,description,answer} = data;
+  static async saveToDeck(data, deckId) {
+    const { question, description, answer } = data;
     const query = { // create the card
-      text: 'INSERT INTO cards(question, description, answer) VALUES($1, $2, $3) RETURNING card_id',
+      text: 'INSERT INTO cards(question, description, answer) VALUES($1, $2, $3) RETURNING *',
       values: [question, description, answer],
     };
 
@@ -62,7 +60,7 @@ class Card {
     console.log(query2)
       const { rowCount } = await db.query(query2);
 
-    if(!rowCount) throw new Error('Card assignment error.')
+    if (!rowCount) throw new Error('Card assignment error.')
 
     return { card_id };
   }
@@ -88,10 +86,17 @@ class Card {
       catch(e){
         throw new Error(e)
       }
+
+      return this.card_id;
     }
   static async getByDeckId(deckId) {
-    const { rows } = await db.query("SELECT c.card_id, c.question, c.description, c.answer FROM cards c JOIN deck_cards dc ON c.card_id = dc.card_id WHERE dc.deck_id = $1;",[deckId]);
-    return rows.map((row) => new Card(row));
+    const response = await db.query("SELECT c.card_id, c.question, c.description, c.answer FROM cards c JOIN deck_cards dc ON c.card_id = dc.card_id WHERE dc.deck_id = $1;", [deckId]);
+
+    if (!response.rowCount) {
+      throw new Error('No such deck found.')
+    }
+
+    return response.rows.map((row) => new Card(row));
   }
 }
 

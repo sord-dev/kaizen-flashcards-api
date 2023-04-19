@@ -24,7 +24,6 @@ class User {
       const user_id = await db.query("SELECT user_id from users WHERE username =$1;",[username])
       console.log(user_id.rows[0].user_id)
       const resp = await db.query("SELECT token FROM token WHERE user_id = $1;",[user_id.rows[0].user_id])
-      console.log(resp.rows[0].token)
       return resp.rows[0].token;
     }
     catch{
