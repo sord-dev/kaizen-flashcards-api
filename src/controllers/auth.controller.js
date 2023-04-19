@@ -8,7 +8,7 @@ module.exports.login = async (req, res) => {
         const validPw = await User.comparePassword(body.password, user.password);
         console.log(body.username)
         const token = await User.getToken(body.username)
-   
+        console.log("HERE WITH :")
 
         if (validPw) {
             // check user streak

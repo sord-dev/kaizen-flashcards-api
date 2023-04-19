@@ -12,15 +12,6 @@ CREATE TABLE users (
   PRIMARY KEY (user_id),
   UNIQUE (user_id)
 );
-CREATE TABLE user_logged_in (
-  logged_id INT GENERATED ALWAYS AS IDENTITY,
-  logged_date DATE,
-  user_id INT,
-  days_logged INT,
-  FOREIGN KEY (user_id) REFERENCES users(user_id),
-  PRIMARY KEY (logged_id)
-);
-
 CREATE TABLE token (
   token_id INT GENERATED ALWAYS AS IDENTITY,
   token VARCHAR(255) UNIQUE,
