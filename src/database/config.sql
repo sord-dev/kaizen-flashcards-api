@@ -83,5 +83,3 @@ INSERT INTO deck_cards (deck_id, card_id) VALUES
   (1, 3),
   (1, 4),
   (1, 5);
-
-INSERT INTO token (user_id, token) VALUES (1, '24a276d6-990e-458f-9575-8c76cceb8ea6');
