@@ -1,5 +1,4 @@
 const db = require("../database/postgres.db.js");
-const Card = require("./card.js");
 
 class Deck {
   constructor(deck_id, name, user_id) {

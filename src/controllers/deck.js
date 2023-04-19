@@ -3,10 +3,10 @@ const Card = require("../models/card");
 const User = require("../models/user");
 
 const allByID = async (req, res) => {
-    console.log("AGGGGHHH ", req.body);
     try {
         const user_id = await User.findUserIdByToken(req.headers['authorization'])
-        const resp = await Deck.getAll(parseInt(user_id));
+        console.log(user_id)
+        const resp = await Deck.getAll(parseInt(user_id.user_id));
         res.status(200).json(resp);
     }
     catch (e) {

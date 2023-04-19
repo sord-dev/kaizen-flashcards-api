@@ -7,6 +7,14 @@ class StreakCounter {
         this.lastHit = dayjs(new Date());
     }
 
+    //create function to call when user loggs/ sighs up that saves dayjs value
+    static async UserSignupDate (){
+        const SighUp = dayjs().format()
+    }
+
+    //create function that finds change of last login and the new date the user logged in(only callable in lOGIN)
+
+    
     static shouldUpdate(streakCounter) {
         let startDate = dayjs(streakCounter.startDate)
         let lastHit = dayjs(streakCounter.lastHit);
