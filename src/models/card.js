@@ -10,7 +10,6 @@ class Card {
   static async getById(id) {
     try {
       const resp = await db.query("SELECT * FROM cards WHERE card_id = $1 LIMIT 1;", [id])
-
       return new Card(resp.rows[0]);
     }
     catch {
@@ -74,12 +73,15 @@ class Card {
         throw new Error("Unable to change card content")
       }
     }
-    static async Destroy (card_id){
+     async Destroy (){
       try{
-        const resp = await db.query("DELETE FROM cards WHERE card_id = $1",[card_id])
+        const deck_id = await db.query("SELECT deck_id FROM deck_cards WHERE card_id = $1",[this.card_id])
+        const removeRelationship = await db.query("DELETE FROM deck_cards WHERE deck_id = $1 AND card_id = $2",[deck_id.rows[0].deck_id, this.card_id])
+        const resp = await db.query("DELETE FROM cards WHERE card_id = $1 RETURNING *;",[this.card_id])
         if (resp.rows.length >1){
         throw new Error("Unable to delete card")
         }
+        console.log(resp.rows[0])
         return resp.rows[0];
       }
       catch(e){
