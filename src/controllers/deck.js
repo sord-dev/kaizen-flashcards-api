@@ -29,7 +29,7 @@ const createDeck = async (req, res) => {
     try {
         const user_id = await User.findUserIdByToken(req.headers['authorization'])
     
-        const resp = await Deck.save(req.body.name, user_id.user_id)
+        const resp = await Deck.save(req.body.name, user_id)
 
         res.status(201).json(resp)
     }
