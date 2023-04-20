@@ -73,7 +73,9 @@ class Deck {
   async destroy(){
     try{
       const card_id = await db.query("SELECT card_id FROM deck_cards WHERE deck_id = $1",[this.deck_id])
-      const removeFromRelation = await db.query("DELETE FROM deck_cards WHERE deck_id = $1 AND card_id = $2",[this.deck_id, card_id.rows[0].card_id])
+      if (card_id.rowCount != 0){
+        const removeFromRelation = await db.query("DELETE FROM deck_cards WHERE deck_id = $1 AND card_id = $2",[this.deck_id, card_id.rows[0].card_id])
+      }
       await db.query("DELETE FROM decks WHERE deck_id = $1;", [this.deck_id]);
 
       return this.deck_id;
