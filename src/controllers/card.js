@@ -25,8 +25,8 @@ const oneCardFromOneDeck = async (req, res) => {
     }
 }
 const NewCard = async (req, res) => {
+    console.log(req.body);
     try {
-        console.log("Here")
         const resp = await Card.saveToDeck(req.body, parseInt(req.params.deck_id));
         console.log("After create");
         res.status(201).json(resp);
