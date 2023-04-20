@@ -3,14 +3,24 @@ DROP TABLE IF EXISTS cards CASCADE;
 DROP TABLE IF EXISTS decks CASCADE;
 DROP TABLE IF EXISTS users CASCADE;
 DROP TABLE IF EXISTS token CASCADE;
+DROP TABLE IF EXISTS user_logged_in CASCADE;
 DROP TABLE IF EXISTS user_question_dif CASCADE;
+DROP TABLE IF EXISTS User_stats CASCADE;
 
+CREATE TABLE User_stats (
+  User_stats_id INT GENERATED ALWAYS AS IDENTITY,
+  amount INT,
+  Correct INT,
+  PRIMARY KEY (User_stats_id)
+);
 CREATE TABLE users (
   user_id  INT GENERATED ALWAYS AS IDENTITY,
   username VARCHAR(255) UNIQUE,
   password VARCHAR(255),
+  User_stats_id INT,
   PRIMARY KEY (user_id),
-  UNIQUE (user_id)
+  UNIQUE (user_id),
+  FOREIGN KEY (User_stats_id) REFERENCES User_stats(User_stats_id)
 );
 CREATE TABLE user_logged_in (
   logged_id INT GENERATED ALWAYS AS IDENTITY,

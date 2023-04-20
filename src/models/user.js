@@ -114,9 +114,10 @@ class User {
     }
   }
   async save() {
+    const resp = await db.query("INSERT INTO User_stats(amount,Correct) VALUES(0,0) RETURNING User_stats_id;")
     let response = await db.query(
-      "INSERT INTO users (username, password) VALUES ($1 ,$2) RETURNING *",
-      [this.username, this.password]
+      "INSERT INTO users (username, password,User_stats_id) VALUES ($1 ,$2,$3) RETURNING *;",
+      [this.username, this.password,resp.rows[0].user_stats_id]
     );
 
     if (response.rowCount == 0) {
@@ -124,6 +125,18 @@ class User {
     } else {
       return { message: "Created" };
     }
+  }
+  static async AddMoreToAmount(amount,correct,user_id){
+  
+    const user_stats_id = await db.query("SELECT User_stats_id FROM users WHERE user_id = $1",[user_id])
+    const CurrentAmount = await db.query("SELECT amount FROM User_stats WHERE User_stats_id = $1",[user_stats_id.rows[0].user_stats_id]);
+    const currentCorrect = await db.query("SELECT Correct FROM User_stats Where User_stats_id = $1",[user_stats_id.rows[0].user_stats_id]);
+    const resp = await db.query("UPDATE User_stats SET amount=$1, Correct=$2 WHERE User_stats_id = $3 RETURNING *;",[CurrentAmount.rows[0].amount + parseInt(amount),currentCorrect.rows[0].correct + parseInt(correct),user_stats_id.rows[0].user_stats_id])
+  }
+  static async GetAllStatsByUser (user_id){
+    const user_stats_id = await db.query("SELECT User_stats_id FROM users WHERE user_id = $1",[user_id])
+    const resp = await db.query("SELECT * FROM User_stats WHERE User_stats_id = $1",[user_stats_id.rows[0].user_stats_id])
+    return resp
   }
 }
 

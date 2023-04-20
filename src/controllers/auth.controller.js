@@ -45,3 +45,22 @@ module.exports.index = async (req, res) => {
         res.json({ message: e.message })
     }
 }
+module.exports.addStats = async(req,res)=>{
+    try{
+        const user_id = parseInt (req.body.user_id);
+        const resp = await User.AddMoreToAmount(req.body.amount,req.body.correct,user_id)
+        res.json({Type:"Success"}).status(200)
+    }
+    catch(e){
+        res.json({message : e.message}).status(404)
+    }
+}
+module.exports.getUserStats = async(req,res)=>{
+    try{
+        const resp = await User.GetAllStatsByUser(parseInt(req.params.user_id))
+        res.json(resp.rows[0]).status(200)
+    }
+    catch(e){
+        res.json({message : e.message}).status(404)
+    }
+}
