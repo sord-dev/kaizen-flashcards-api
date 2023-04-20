@@ -9,7 +9,7 @@ module.exports.login = async (req, res) => {
 
         if (validPw) {
             // check user streak
-            res.status(200).json({ ...user, password: null, Token: await token })
+            res.status(200).json({ ...user, password: null })
         } else {
             throw new Error('Incorrect Password')
         }
@@ -17,6 +17,7 @@ module.exports.login = async (req, res) => {
         return res.status(401).json({ error: error.message })
     }
 }
+
 module.exports.register = async (req, res) => {
     const { body } = req;
     try {
@@ -36,6 +37,7 @@ module.exports.register = async (req, res) => {
         return res.status(400).json({ error: error.message });
     }
 }
+
 module.exports.index = async (req, res) => {
     try {
         const resp = await User.getAll();
