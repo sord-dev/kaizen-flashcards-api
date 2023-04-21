@@ -13,6 +13,7 @@ CREATE TABLE User_stats (
   Correct INT,
   PRIMARY KEY (User_stats_id)
 );
+
 CREATE TABLE users (
   user_id  INT GENERATED ALWAYS AS IDENTITY,
   username VARCHAR(255) UNIQUE,
@@ -22,6 +23,7 @@ CREATE TABLE users (
   UNIQUE (user_id),
   FOREIGN KEY (User_stats_id) REFERENCES User_stats(User_stats_id)
 );
+
 CREATE TABLE user_logged_in (
   logged_id INT GENERATED ALWAYS AS IDENTITY,
   logged_date DATE,
@@ -38,6 +40,7 @@ CREATE TABLE token (
   PRIMARY Key (token_id),
   FOREIGN KEY (user_id) REFERENCES users (user_id)
 );
+
 CREATE TABLE decks (
   deck_id  INT GENERATED ALWAYS AS IDENTITY,
   name VARCHAR(255),
@@ -46,6 +49,7 @@ CREATE TABLE decks (
   FOREIGN KEY (user_id) REFERENCES users(user_id),
    UNIQUE (deck_id)
 );
+
 CREATE TABLE cards(
     card_id INT GENERATED ALWAYS AS IDENTITY,
     question VARCHAR(255) NOT NULL,
@@ -53,6 +57,7 @@ CREATE TABLE cards(
     answer VARCHAR(255) NOT NULL,
     UNIQUE (card_id)
 );
+
 CREATE TABLE deck_cards (
   id  INT GENERATED ALWAYS AS IDENTITY,
   deck_id INT,
@@ -61,6 +66,7 @@ CREATE TABLE deck_cards (
   FOREIGN KEY (card_id) REFERENCES cards(card_id),
   UNIQUE (id)
 );
+
 CREATE TABLE user_question_dif(
   question_dif_id INT GENERATED ALWAYS AS IDENTITY,
   difficulty VARCHAR(255),
@@ -71,8 +77,10 @@ CREATE TABLE user_question_dif(
   FOREIGN KEY (user_id) REFERENCES users(user_id)
 );
 
+INSERT INTO User_stats (amount, Correct) VALUES (0, 0);
+
 -- Insert a user
-INSERT INTO users (username, password) VALUES ('admin', '$2b$10$/QzbJnjbKX7Bgma7L9DfGu3wRMKFMfCtc.Jekyh3PbxDoSjuPEngm');
+INSERT INTO users (username, password, User_stats_id) VALUES ('admin', '$2b$10$/QzbJnjbKX7Bgma7L9DfGu3wRMKFMfCtc.Jekyh3PbxDoSjuPEngm', 1);
 
 -- Insert a deck created by user 1
 INSERT INTO decks (name, user_id) VALUES ('Kanji', 1);
@@ -93,3 +101,4 @@ INSERT INTO deck_cards (deck_id, card_id) VALUES
   (1, 3),
   (1, 4),
   (1, 5);
+
