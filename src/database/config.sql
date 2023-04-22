@@ -2,48 +2,31 @@ DROP TABLE IF EXISTS deck_cards CASCADE;
 DROP TABLE IF EXISTS cards CASCADE;
 DROP TABLE IF EXISTS decks CASCADE;
 DROP TABLE IF EXISTS users CASCADE;
-DROP TABLE IF EXISTS token CASCADE;
 DROP TABLE IF EXISTS user_logged_in CASCADE;
 DROP TABLE IF EXISTS user_question_dif CASCADE;
-DROP TABLE IF EXISTS User_stats CASCADE;
+DROP TABLE IF EXISTS user_stats CASCADE;
 
-CREATE TABLE User_stats (
-  User_stats_id INT GENERATED ALWAYS AS IDENTITY,
-  amount INT,
-  Correct INT,
-  PRIMARY KEY (User_stats_id)
+CREATE TABLE user_stats (
+  user_stats_id INT GENERATED ALWAYS AS IDENTITY,
+  amount INT DEFAULT 0,
+  correct INT DEFAULT 0,
+  PRIMARY KEY (user_stats_id)
 );
 
 CREATE TABLE users (
   user_id  INT GENERATED ALWAYS AS IDENTITY,
-  username VARCHAR(255) UNIQUE,
-  password VARCHAR(255),
-  User_stats_id INT,
+  username VARCHAR(255) UNIQUE NOT NULL,
+  password VARCHAR(255) NOT NULL,
+  user_stats_id INT NOT NULL,
+  streak JSON,
   PRIMARY KEY (user_id),
   UNIQUE (user_id),
-  FOREIGN KEY (User_stats_id) REFERENCES User_stats(User_stats_id)
-);
-
-CREATE TABLE user_logged_in (
-  logged_id INT GENERATED ALWAYS AS IDENTITY,
-  logged_date DATE,
-  user_id INT,
-  days_logged INT,
-  FOREIGN KEY (user_id) REFERENCES users(user_id),
-  PRIMARY KEY (logged_id)
-);
-
-CREATE TABLE token (
-  token_id INT GENERATED ALWAYS AS IDENTITY,
-  token VARCHAR(255) UNIQUE,
-  user_id INT NOT NULL,
-  PRIMARY Key (token_id),
-  FOREIGN KEY (user_id) REFERENCES users (user_id)
+  FOREIGN KEY (user_stats_id) REFERENCES user_stats(user_stats_id)
 );
 
 CREATE TABLE decks (
   deck_id  INT GENERATED ALWAYS AS IDENTITY,
-  name VARCHAR(255),
+  name VARCHAR(255) NOT NULL,
   user_id INT,
   PRIMARY KEY(deck_id),
   FOREIGN KEY (user_id) REFERENCES users(user_id),
@@ -53,7 +36,7 @@ CREATE TABLE decks (
 CREATE TABLE cards(
     card_id INT GENERATED ALWAYS AS IDENTITY,
     question VARCHAR(255) NOT NULL,
-    description VARCHAR(255),
+    description VARCHAR(255) NOT NULL,
     answer VARCHAR(255) NOT NULL,
     UNIQUE (card_id)
 );
@@ -77,10 +60,10 @@ CREATE TABLE user_question_dif(
   FOREIGN KEY (user_id) REFERENCES users(user_id)
 );
 
-INSERT INTO User_stats (amount, Correct) VALUES (0, 0);
+INSERT INTO user_stats (amount, correct) VALUES (0, 0);
 
 -- Insert a user
-INSERT INTO users (username, password, User_stats_id) VALUES ('admin', '$2b$10$/QzbJnjbKX7Bgma7L9DfGu3wRMKFMfCtc.Jekyh3PbxDoSjuPEngm', 1);
+INSERT INTO users (username, password, user_stats_id, streak) VALUES ('admin', '$2b$10$/QzbJnjbKX7Bgma7L9DfGu3wRMKFMfCtc.Jekyh3PbxDoSjuPEngm', 1, '{ "count": 1,"lastHit": "2023-04-21T07:24:16.165Z", "startDate": "2023-04-21T07:24:16.165Z"}');
 
 -- Insert a deck created by user 1
 INSERT INTO decks (name, user_id) VALUES ('Kanji', 1);

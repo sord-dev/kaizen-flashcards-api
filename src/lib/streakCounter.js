@@ -1,36 +1,27 @@
 const dayjs = require('dayjs')
 
 class StreakCounter {
-    constructor(startDate) {
-        this.startDate = dayjs(startDate);
-        this.count = 1;
-        this.lastHit = dayjs(new Date());
+    constructor({ startDate, count, lastHit }) {
+        this.startDate = dayjs(startDate) || dayjs();
+        this.count = count || 1;
+        this.lastHit = dayjs(lastHit) || dayjs(new Date());
     }
 
-    //create function to call when user loggs/ sighs up that saves dayjs value
-    static async UserSignupDate (){
-        const SighUp = dayjs().format()
-    }
-
-    //create function that finds change of last login and the new date the user logged in(only callable in lOGIN)
-
-    
-    static shouldUpdate(streakCounter) {
-        let startDate = dayjs(streakCounter.startDate)
-        let lastHit = dayjs(streakCounter.lastHit);
+    shouldUpdate() {
+        let today = dayjs();
         
-        let difference = lastHit.diff(startDate, 'day');
+        let difference = today.diff(this.lastHit, 'day');
 
-        return difference === 1; 
+        console.log('diff, ', difference);
+        return difference === 1;
     }
 
-    static shouldReset(streakCounter) {
-        let startDate = dayjs(streakCounter.startDate)
-        let lastHit = dayjs(streakCounter.lastHit);
-        
-        let difference = lastHit.diff(startDate, 'day');
+    shouldReset() {
+        let today = dayjs();
 
-        if(difference == 0) return false;
+        let difference = this.lastHit.diff(today, 'day');
+
+        if (difference == 0) return false;
         return difference != 1;
     }
 

@@ -1,94 +1,43 @@
 const db = require("../database/postgres.db.js");
 const bcrypt = require("bcrypt");
-const  uuid  = require("uuid");
-
+const StreakCounter = require("../lib/streakCounter.js");
 
 class User {
-  constructor({ user_id, username, password }) {
+  constructor({ user_id, username, password, streak, last_hit, user_stats_id }) {
     this.user_id = user_id;
     this.username = username;
     this.password = password;
+    this.streak = streak;
+    this.last_hit = last_hit;
+    this.user_stats_id = user_stats_id;
   }
-  static async getAll(){
-    try{
+
+  static async getAll() {
+    try {
       const resp = await db.query("SELECT * FROM users")
-      return resp.rows.map((e)=> new User(e))
+      return resp.rows.map((e) => new User(e))
     }
-    catch{
+    catch {
       throw new Error("Unable to throw all")
     }
   }
-  static async findTokenAndDelete(token){
-    try{
-      const token_id = await db.query("SELECT token_id FROM token WHERE Token = $1;",[token])
-      const resp = await db.query("DELETE FROM token WHERE token_id = $1;",[token_id])
-      return resp.rows.token_id;
-    }
-    catch{
-      throw new Error("Unable to find token")
-    }
+
+  static async findById(user_id) {
+    const resp = await db.query("SELECT * FROM users WHERE user_id = $1;", [user_id])
+
+    if(!resp.rowCount) throw new Error('Unable to find user.')
+
+    return new User(resp.rows[0]);
   }
-  static async getToken (username){
-    try{
-      console.log("in model",username)
-      const user_id = await db.query("SELECT user_id from users WHERE username =$1;",[username])
-      console.log(user_id.rows[0].user_id)
-      const resp = await db.query("SELECT token FROM token WHERE user_id = $1;",[user_id.rows[0].user_id])
-      return resp.rows[0].token;
-    }
-    catch{
-      throw new Error ("Unable to find token")
-    }
-  }
-  static async GetIDByName(username){
-    try{
-      const resp = await db.query("SELECT user_id FROM users WHERE username = $1;",[username])
-      return resp.rows.user_id;
-    }
-    catch{
-      throw new Error("Unable to get")
-    }
-  }
-  static async addToken(token,user_id){
-    try{
-      const resp = await db.query("INSERT INTO Token(token,user_id) VALUES($1,$2);",[token,user_id])
-    }
-    catch(e){throw new Error (e)}
-  }
-  static async find() {
-    let res = await db.query("SELECT * FROM users;");
+
+  static async findByUsername(username) {
+    let res = await db.query("SELECT * FROM users WHERE LOWER(username) = LOWER($1);", [username]);
 
     if (res.rowCount == 0) {
       throw new Error("query error");
     }
 
-    return res.rows.map((u) => new User(u));
-  }
-
-  static async createUserToken(){
-    return  (uuid.v4(5));
-  }
-  static async findByUsername(username) {
-    const res = await db.query(
-      "SELECT * FROM users WHERE LOWER(username) = $1;",
-      [username.toLowerCase()]
-    );
-
-    if (res.rowCount == 0) {
-      throw new Error("No user found.");
-    }
-
     return new User(res.rows[0]);
-  }
-
-  static async findUserIdByToken (token) {
-    try{
-      const user_id = await db.query("SELECT user_id FROM token WHERE Token = $1",[token])
-      return user_id.rows[0];
-    }
-    catch{
-      throw new Error("Unable to find a user with that token")
-    }
   }
 
   static async hashPassword(password) {
@@ -96,29 +45,20 @@ class User {
     let hashed = await bcrypt.hash(password, salt);
     return hashed;
   }
+
   static async comparePassword(query, compare) {
     let valid = await bcrypt.compare(query, compare);
 
     return valid;
   }
-  static async CheckUserAccount(username,password){
-    try{
-      const answer = await db.query("SELECT * FROM users WHERE username = $1 AND password = $2",[username,password])
-      if (answer.rows.length == 0){
-        return ("No Account")
-      }
-      throw new Error("Unable to check account")
-    } 
-    catch{
-      throw new Error("Unable to check if user account exists")
-    }
-  }
+
   async save() {
-    const resp = await db.query("INSERT INTO User_stats(amount,Correct) VALUES(0,0) RETURNING User_stats_id;")
+    const userStatistics = await db.query("INSERT INTO user_stats(amount, correct) VALUES(0,0) RETURNING user_stats_id;") // create user statistic 
+
     let response = await db.query(
-      "INSERT INTO users (username, password,User_stats_id) VALUES ($1 ,$2,$3) RETURNING *;",
-      [this.username, this.password,resp.rows[0].user_stats_id]
-    );
+      "INSERT INTO users (username, password, streak, user_stats_id) VALUES ($1 ,$2, $3, $4) RETURNING *;",
+      [this.username, this.password, this.streak, userStatistics.rows[0].user_stats_id]
+    ); // create user and associate user statistic + provided streak values
 
     if (response.rowCount == 0) {
       throw new Error("Save Error");
@@ -126,16 +66,42 @@ class User {
       return { message: "Created" };
     }
   }
-  static async AddMoreToAmount(amount,correct,user_id){
-  
-    const user_stats_id = await db.query("SELECT User_stats_id FROM users WHERE user_id = $1",[user_id])
-    const CurrentAmount = await db.query("SELECT amount FROM User_stats WHERE User_stats_id = $1",[user_stats_id.rows[0].user_stats_id]);
-    const currentCorrect = await db.query("SELECT Correct FROM User_stats Where User_stats_id = $1",[user_stats_id.rows[0].user_stats_id]);
-    const resp = await db.query("UPDATE User_stats SET amount=$1, Correct=$2 WHERE User_stats_id = $3 RETURNING *;",[CurrentAmount.rows[0].amount + parseInt(amount),currentCorrect.rows[0].correct + parseInt(correct),user_stats_id.rows[0].user_stats_id])
+
+  async updateStreak(streak) {
+    const response = await db.query("UPDATE users SET streak=$1 WHERE user_id = $2 RETURNING *;", [streak, this.user_id]);
+
+    if (!response.rowCount) throw new Error('Update Error');
+
+    let user = new User(response.rows[0]);
+
+    user.streak = new StreakCounter(user.streak);
+    return user;
   }
-  static async GetAllStatsByUser (user_id){
-    const user_stats_id = await db.query("SELECT User_stats_id FROM users WHERE user_id = $1",[user_id])
-    const resp = await db.query("SELECT * FROM User_stats WHERE User_stats_id = $1",[user_stats_id.rows[0].user_stats_id])
+
+  async updateStats(amount, correct) { 
+    // get current user stats
+    const response = await db.query("SELECT amount, correct FROM user_stats WHERE user_stats_id = $1", [this.user_stats_id]);
+    if (!response.rowCount) throw new Error('Update Error');
+    let currentAmount = response.rows[0];
+
+    // append stats gained
+    let newAmount = currentAmount.amount + parseInt(amount)
+    let newCorrect = currentAmount.correct + parseInt(correct)
+
+    const resp = await db.query("UPDATE user_stats SET amount=$1, correct=$2 WHERE user_stats_id = $3 RETURNING *;", [newAmount, newCorrect, this.user_stats_id])
+
+    return resp.rows[0];
+  }
+
+  static async getUserStats(user_id) { 
+    const response = await db.query("SELECT user_stats_id FROM users WHERE user_id = $1", [user_id])
+
+    if (!response.rowCount) throw new Error('Error finding user.');
+
+    const user_stats_id = response.rows[0].user_stats_id;
+
+    const resp = await db.query("SELECT * FROM user_stats WHERE user_stats_id = $1", [user_stats_id])
+
     return resp
   }
 }
