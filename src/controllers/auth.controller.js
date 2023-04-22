@@ -10,22 +10,21 @@ module.exports.login = async (req, res) => {
 
         if (validPw) {
             let streak = new StreakCounter(user.streak);
-            // check user streak
-            if (streak.shouldUpdate()) {
-                streak.incriment();
-                const userdat = await user.updateStreak(streak)
-                return res.status(200).json({ ...userdat, password: null })
+            // check user streak status
+            if (streak.shouldUpdate()) { // if streak should update, incriment streak
+                streak.incriment(); 
+                const userdat = await user.updateStreak(streak) // update that data in the user
+                return res.status(200).json({ ...userdat, password: null }) // return user data back to client
             }
 
-            else if (streak.shouldReset()) {
+            else if (streak.shouldReset()) { // if streak should reset, reset streak
                 streak.reset();
-
                 const userdat = await user.updateStreak(streak)
 
-                return res.status(200).json({ ...userdat, password: null })
+                return res.status(200).json({ ...userdat, password: null }) // return user data back to client
             }
-            else {
-                return res.status(200).json({ ...user, password: null, streak })
+            else { // if user is signing in on the same day
+                return res.status(200).json({ ...user, password: null, streak }) // send back user details and streak 
             }
         } else {
             throw new Error('Incorrect Password')
