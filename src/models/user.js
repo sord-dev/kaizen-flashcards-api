@@ -1,7 +1,5 @@
 const db = require("../database/postgres.db.js");
 const bcrypt = require("bcrypt");
-const uuid = require("uuid");
-
 
 class User {
   constructor({ user_id, username, password, streak, last_hit, user_stats_id }) {
@@ -31,7 +29,6 @@ class User {
     return new User(resp.rows[0]);
   }
 
-
   static async findByUsername(username) {
     let res = await db.query("SELECT * FROM users WHERE LOWER(username) = LOWER($1);", [username]);
 
@@ -42,18 +39,17 @@ class User {
     return new User(res.rows[0]);
   }
 
-
   static async hashPassword(password) {
     const salt = await bcrypt.genSalt();
     let hashed = await bcrypt.hash(password, salt);
     return hashed;
   }
+
   static async comparePassword(query, compare) {
     let valid = await bcrypt.compare(query, compare);
 
     return valid;
   }
-
 
   async save() {
     const userStatistics = await db.query("INSERT INTO user_stats(amount, correct) VALUES(0,0) RETURNING user_stats_id;") // create user statistic 
@@ -78,9 +74,6 @@ class User {
     return new User(response.rows[0]);
   }
 
-  //SELECT u.user_id, u.username, u.user_stats_id, u.streak, us.amount, us.correct FROM users u 
-  //JOIN user_stats us ON (u.user_stats_id = us.user_stats_id)
-
   async updateStats(amount, correct) { 
     // get current user stats
     const response = await db.query("SELECT amount, correct FROM user_stats WHERE user_stats_id = $1", [this.user_stats_id]);
@@ -101,10 +94,10 @@ class User {
 
     if (!response.rowCount) throw new Error('Error finding user.');
 
-    const user_stats_id = response.rows[0]
+    const user_stats_id = response.rows[0].user_stats_id;
 
     const resp = await db.query("SELECT * FROM user_stats WHERE user_stats_id = $1", [user_stats_id])
-    
+
     return resp
   }
 }

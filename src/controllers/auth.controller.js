@@ -81,6 +81,7 @@ module.exports.getUserStats = async (req, res) => {
         res.json(resp.rows[0]).status(200)
     }
     catch (e) {
-        res.json({ message: e.message }).status(404)
+        console.log(e);
+        res.status(404).json({ message: e.message })
     }
 }
