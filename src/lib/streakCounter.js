@@ -1,28 +1,27 @@
 const dayjs = require('dayjs')
 
 class StreakCounter {
-    constructor(startDate) {
-        this.startDate = dayjs(startDate);
-        this.count = 1;
-        this.lastHit = dayjs(new Date());
-    }
-    
-    static shouldUpdate(streakCounter) {
-        let startDate = dayjs(streakCounter.startDate)
-        let lastHit = dayjs(streakCounter.lastHit);
-        
-        let difference = lastHit.diff(startDate, 'day');
-
-        return difference === 1; 
+    constructor({ startDate, count, lastHit }) {
+        this.startDate = dayjs(startDate) || dayjs();
+        this.count = count || 1;
+        this.lastHit = dayjs(lastHit) || dayjs(new Date());
     }
 
-    static shouldReset(streakCounter) {
-        let startDate = dayjs(streakCounter.startDate)
-        let lastHit = dayjs(streakCounter.lastHit);
+    shouldUpdate() {
+        let today = dayjs();
         
-        let difference = lastHit.diff(startDate, 'day');
+        let difference = today.diff(this.lastHit, 'day');
 
-        if(difference == 0) return false;
+        console.log('diff, ', difference);
+        return difference === 1;
+    }
+
+    shouldReset() {
+        let today = dayjs();
+
+        let difference = this.lastHit.diff(today, 'day');
+
+        if (difference == 0) return false;
         return difference != 1;
     }
 

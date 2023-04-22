@@ -9,18 +9,24 @@ module.exports.login = async (req, res) => {
         const validPw = await User.comparePassword(body.password, user.password);
 
         if (validPw) {
+            let streak = new StreakCounter(user.streak);
             // check user streak
-            if(StreakCounter.shouldUpdate(user.streak)) {
-                user.streak.incriment()
-                await user.updateStreak()
+            if (streak.shouldUpdate()) {
+                streak.incriment();
+                const userdat = await user.updateStreak(streak)
+                return res.status(200).json({ ...userdat, password: null })
             }
 
-            else if(StreakCounter.shouldReset(user.streak)) {
-                user.streak.reset()
-                await user.updateStreak()
+            else if (streak.shouldReset()) {
+                streak.reset();
+
+                const userdat = await user.updateStreak(streak)
+
+                return res.status(200).json({ ...userdat, password: null })
             }
-        
-            res.status(200).json({ ...user, password: null })
+            else {
+                return res.status(200).json({ ...user, password: null, streak })
+            }
         } else {
             throw new Error('Incorrect Password')
         }
@@ -40,7 +46,7 @@ module.exports.register = async (req, res) => {
         usr.password = hashed;
 
         // create and assign user streak
-        const userStreak = new StreakCounter(new Date());
+        const userStreak = new StreakCounter({ startDate: new Date() });
         usr.streak = userStreak;
         await usr.save();
 

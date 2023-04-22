@@ -1,5 +1,6 @@
 const db = require("../database/postgres.db.js");
 const bcrypt = require("bcrypt");
+const StreakCounter = require("../lib/streakCounter.js");
 
 class User {
   constructor({ user_id, username, password, streak, last_hit, user_stats_id }) {
@@ -66,12 +67,15 @@ class User {
     }
   }
 
-  async updateStreak() {
-    const response = await db.query("UPDATE users SET streak=$1 WHERE user_id = $2  RETURNING *;", [this.streak, this.user_id]);
+  async updateStreak(streak) {
+    const response = await db.query("UPDATE users SET streak=$1 WHERE user_id = $2 RETURNING *;", [streak, this.user_id]);
 
     if (!response.rowCount) throw new Error('Update Error');
 
-    return new User(response.rows[0]);
+    let user = new User(response.rows[0]);
+
+    user.streak = new StreakCounter(user.streak);
+    return user;
   }
 
   async updateStats(amount, correct) { 

@@ -63,7 +63,7 @@ CREATE TABLE user_question_dif(
 INSERT INTO user_stats (amount, correct) VALUES (0, 0);
 
 -- Insert a user
-INSERT INTO users (username, password, user_stats_id, streak) VALUES ('admin', '$2b$10$/QzbJnjbKX7Bgma7L9DfGu3wRMKFMfCtc.Jekyh3PbxDoSjuPEngm', 1, '{ "count": 1,"lastHit": "2023-04-22T07:24:16.165Z", "startDate": "2023-04-22T07:24:16.165Z"}');
+INSERT INTO users (username, password, user_stats_id, streak) VALUES ('admin', '$2b$10$/QzbJnjbKX7Bgma7L9DfGu3wRMKFMfCtc.Jekyh3PbxDoSjuPEngm', 1, '{ "count": 1,"lastHit": "2023-04-21T07:24:16.165Z", "startDate": "2023-04-21T07:24:16.165Z"}');
 
 -- Insert a deck created by user 1
 INSERT INTO decks (name, user_id) VALUES ('Kanji', 1);
