@@ -7,10 +7,6 @@ class StreakCounter {
         this.lastHit = dayjs(lastHit) || dayjs();
     }
 
-    tick() {
-        this.lastHit = dayjs();
-    }
-
     shouldUpdate() {
         let today = dayjs();
         
