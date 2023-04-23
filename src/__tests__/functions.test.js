@@ -1,5 +1,7 @@
 const StreakCounter = require('../lib/streakCounter.js');
 
+const dayjs = require('dayjs')
+
 describe('Streak Counter Functionality', () => {
     it('Should have the streak at 1 and have today as the start date', () => {
         let today = new Date();
@@ -31,7 +33,13 @@ describe('Streak Counter Functionality', () => {
     });
 
     it('Should detect valid streak', () => {
-        let streak = new StreakCounter({ lastHit: new Date('2023-04-21'), startDate: new Date(), count: 1 }); // smth strange happens with this test, i'm not sure what
+        let yesterday = new Date()
+        
+        yesterday.setDate(yesterday.getDate() - 1)
+
+        let streak = new StreakCounter({ lastHit: yesterday }); // smth strange happens with this test, i'm not sure what
+
+        console.log(yesterday);
 
         expect(streak.shouldUpdate()).toBe(true);
         expect(streak.shouldReset()).toBe(false);

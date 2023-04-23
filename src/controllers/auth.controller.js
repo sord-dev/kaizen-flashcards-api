@@ -24,6 +24,7 @@ module.exports.login = async (req, res) => {
                 return res.status(200).json({ ...userdat, password: null }) // return user data back to client
             }
             else { // if user is signing in on the same day
+                streak
                 return res.status(200).json({ ...user, password: null, streak }) // send back user details and streak 
             }
         } else {

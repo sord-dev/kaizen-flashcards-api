@@ -4,22 +4,24 @@ class StreakCounter {
     constructor({ startDate, count, lastHit }) {
         this.startDate = dayjs(startDate) || dayjs();
         this.count = count || 1;
-        this.lastHit = dayjs(lastHit) || dayjs(new Date());
+        this.lastHit = dayjs(lastHit) || dayjs();
+    }
+
+    tick() {
+        this.lastHit = dayjs();
     }
 
     shouldUpdate() {
         let today = dayjs();
         
-        let difference = today.diff(this.lastHit, 'day');
-
-        console.log('diff, ', difference);
+        let difference = today.get('D') - this.lastHit.get('D');
         return difference === 1;
     }
 
     shouldReset() {
         let today = dayjs();
 
-        let difference = this.lastHit.diff(today, 'day');
+        let difference = today.get('D') - this.lastHit.get('D');
 
         if (difference == 0) return false;
         return difference != 1;
